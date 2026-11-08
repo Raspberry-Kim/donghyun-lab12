@@ -1,5 +1,5 @@
 // 화면 시험: node qa/ui.cjs (index.html을 파일로 연다 · build 뒤에 돌린다)
-// 첫 화면·규약 오류·도구 누르기·마우스 끌기·3×3 유령 놓기·바퀴 확대·가운데 단추 끌기·정보·보기·속도·멎음·저장과 이어 하기·전체 화면·휴대폰 터치·두 손가락·키보드 무시·시리즈 띠·콘솔 오류를 본다
+// 첫 화면·규약 오류·도구 누르기·마우스 끌기·3×3 유령 놓기·바퀴 확대·가운데 단추 끌기·정보·보기·속도·멎음·저장 메뉴와 칸 3개·.dhsave·첫 화면 칸 목록·전체 화면·휴대폰 터치·두 손가락·키보드 무시·시리즈 띠·콘솔 오류를 본다
 const {chromium}=require('/home/user/node_modules/playwright'); const path=require('path'); const assert=require('assert');
 const url='file://'+path.join(__dirname,'..','index.html');
 const H='window.__donghyunsim';
@@ -14,7 +14,7 @@ const H='window.__donghyunsim';
   const cellAt=async(x,y)=>G(`(()=>{const k=c.cell(${x},${y});return {t:k.t,wire:k.wire,z:k.z,b:k.b};})()`);
 
   // 0) 첫 화면: 시작 카드가 떠 있고 달이 흐르지 않는다. 저장이 없으니 이어 하기는 없다
-  assert.strictEqual(await G('S.ready'),true); assert.ok(!(await p.$eval('#ready',e=>e.hidden))); assert.ok(await p.$eval('#resume',e=>e.hidden),'저장 없음 → 이어 하기 숨김');
+  assert.strictEqual(await G('S.ready'),true); assert.ok(!(await p.$eval('#ready',e=>e.hidden))); assert.ok(!(await p.$eval('#load-box',e=>e.hidden)),'첫 화면에 저장한 판 불러오기 칸');
   assert.strictEqual(await G('c.month'),0); await p.waitForTimeout(1300); assert.strictEqual(await G('c.month'),0,'시작 전에는 달이 흐르지 않는다');
   assert.strictEqual(await p.$eval('#stamp-funds',e=>e.textContent.replace(/\s+/g,' ').trim()),'20,000 냥'); assert.strictEqual(await p.$eval('#tools',e=>e.children.length),12);
   ok('첫 화면: 시작 카드 · 달 멎음 · 도구 12');
@@ -57,30 +57,49 @@ const H='window.__donghyunsim';
   const snap=await G('JSON.stringify([c.zones.filter(Boolean).length,c.builds.filter(Boolean).length,S.tool,S.cam.zoom,S.view])'); await p.click('.sim-speed button[data-speed="0"]');
   for(const k of ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter','Space','KeyX','KeyZ','Digit1','KeyR','Escape','KeyF','KeyM','Equal','Minus']) await p.keyboard.press(k);
   assert.strictEqual(await G('JSON.stringify([c.zones.filter(Boolean).length,c.builds.filter(Boolean).length,S.tool,S.cam.zoom,S.view])'),snap); assert.strictEqual(await G('S.speed'),0); assert.ok(!(await G('S.isFull()'))); ok('키보드: 아무 일도 없음');
-  // 11) 저장과 이어 하기: 저장 뒤 새로 열면 이어 하기 단추가 있고 되살아난다
-  assert.ok(await p.evaluate(`${H}.save()`)); const saved=await G('JSON.stringify([c.funds,c.month,c.zones.filter(Boolean).length])');
-  await p.reload(); await p.waitForTimeout(400); await p.evaluate(()=>document.querySelector('#stage').scrollIntoView({block:'center'})); assert.strictEqual(await G('S.ready'),true); assert.ok(!(await p.$eval('#resume',e=>e.hidden)),'이어 하기 보임'); await p.click('#resume'); assert.strictEqual(await G('S.ready'),false);
-  assert.strictEqual(await G('JSON.stringify([c.funds,c.month,c.zones.filter(Boolean).length])'),saved); assert.strictEqual(await G('S.settings.fundsOpt'),0,'저장된 설정(넉넉)'); assert.strictEqual(await p.$eval('#set-card',e=>e.textContent.includes('넉넉')),true); ok('저장 · 이어 하기');
-  // 11b) 저장·불러오기 단추와 .dhcity 파일
-  const fpath='/tmp/sim-export.dhcity';
-  assert.ok(!(await p.$eval('#city-save',e=>e.disabled))); assert.ok(!(await p.$eval('#city-export',e=>e.disabled))); assert.ok(!(await p.$eval('#city-load',e=>e.disabled)));
-  await p.evaluate(`${H}.step(7)`); const fundsNow=await G('c.funds'); await p.click('#city-save'); assert.match(await p.$eval('#status',e=>e.textContent),/저장했다/); assert.strictEqual(await p.evaluate(()=>JSON.parse(localStorage.getItem('donghyunsim.save')).funds),fundsNow,'저장 단추가 지금 자금을 남긴다');
-  await p.evaluate(`${H}.step(3)`); const mLater=await G('c.month'); p.once('dialog',d=>d.accept()); await p.click('#city-load'); assert.strictEqual(await G('c.month'),mLater-3,'불러오기가 저장 시점으로 되돌린다'); assert.strictEqual(await G('S.ready'),false);
-  await p.evaluate(`${H}.step(2)`); p.once('dialog',d=>d.dismiss()); await p.click('#city-load'); assert.strictEqual(await G('c.month'),mLater-1,'취소하면 그대로');
+  // 11) 저장·불러오기: 브라우저 칸 3개 + .dhsave 파일. 메뉴는 누르는 것으로만 고른다(동현전·동현워·동현몬 방식)
+  const mi=async label=>{ const els=await p.$$('.game-menu .mi'); for(const el of els){ if((await el.$eval('span',e=>e.textContent))===label){ await el.click(); return; } } throw new Error('메뉴 항목 없음: '+label); };
+  const menuText=()=>p.$eval('#menu',e=>e.hidden?'':e.textContent);
+  assert.ok(await p.$eval('#load-box',e=>e.hidden),'노는 동안 칸 목록 숨김'); assert.ok(!(await p.$eval('#city-save',e=>e.disabled))); assert.ok(!(await p.$eval('#city-load',e=>e.disabled)));
+  await p.evaluate(`${H}.step(7)`); const saved=await G('JSON.stringify([c.funds,c.month,c.zones.filter(Boolean).length])'); const mSave=await G('c.month');
+  await p.click('#city-save'); assert.match(await menuText(),/^저장브라우저 칸 1비어 있음/); assert.ok(await G('!!S.menu')); 
+  await p.click('.sim-speed button[data-speed="3"]'); await p.waitForTimeout(700); assert.strictEqual(await G('c.month'),mSave,'메뉴가 열린 동안 달이 멎는다'); await p.click('.sim-speed button[data-speed="0"]');
+  await mi('브라우저 칸 1'); assert.strictEqual(await menuText(),''); assert.match(await p.$eval('#status',e=>e.textContent),/브라우저 칸 1에 저장했다/);
+  const slot=await p.evaluate(()=>JSON.parse(localStorage.getItem('donghyunsim:slot1'))); assert.strictEqual(slot.format,'donghyunsim-save'); assert.strictEqual(slot.state.month,mSave); assert.strictEqual(slot.summary.funds,JSON.parse(saved)[0]);
+  await p.evaluate(`${H}.step(3)`); await p.click('#city-save'); await mi('브라우저 칸 1'); assert.match(await menuText(),/칸 1에 덮어쓸까/); await mi('그만둔다'); assert.match(await menuText(),/^저장/,'그만두면 저장 메뉴로'); await mi('돌아가기'); assert.strictEqual(await menuText(),'');
+  assert.strictEqual((await p.evaluate(()=>JSON.parse(localStorage.getItem('donghyunsim:slot1')).state.month)),mSave,'덮어쓰지 않았다');
+  await p.click('#city-save'); await mi('브라우저 칸 2'); assert.strictEqual((await p.evaluate(()=>JSON.parse(localStorage.getItem('donghyunsim:slot2')).state.month)),mSave+3,'칸 2에 저장');
+  // 불러오기 메뉴: 빈 칸은 눌리지 않고, 확인 뒤 저장 시점으로 돌아간다
+  await p.click('#city-load'); assert.match(await menuText(),/^불러오기/); await p.click('.game-menu .mi.off'); assert.match(await menuText(),/^불러오기/,'빈 칸 3은 눌리지 않는다');
+  await mi('브라우저 칸 1'); assert.match(await menuText(),/지금 도시를 두고 불러올까/); await mi('그만둔다'); await mi('돌아가기'); assert.strictEqual(await G('c.month'),mSave+3,'취소하면 그대로');
+  await p.click('#city-load'); await mi('브라우저 칸 1'); await mi('불러온다'); assert.strictEqual(await G('c.month'),mSave,'칸 1의 시점'); assert.strictEqual(await G('JSON.stringify([c.funds,c.month,c.zones.filter(Boolean).length])'),saved); assert.strictEqual(await G('S.settings.fundsOpt'),0,'저장된 설정(넉넉)'); assert.strictEqual(await p.$eval('#set-card',e=>e.textContent.includes('넉넉')),true);
+  // 파일로 내려받기 → .dhsave, 파일에서 불러오기, 잘못된 파일
+  const fpath='/tmp/sim-export.dhsave';
   await p.evaluate(()=>{ const o=URL.createObjectURL.bind(URL); URL.createObjectURL=(bl)=>{ window.__lastBlob=bl; return o(bl); }; HTMLAnchorElement.prototype.click=function(){ window.__lastName=this.download; }; });
-  await p.click('#city-export'); const expName=await p.evaluate('window.__lastName'); assert.match(expName,/^donghyunsim-.*\.dhcity$/,'파일 이름 '+expName); const expText=await p.evaluate('window.__lastBlob.text()'); require('fs').writeFileSync(fpath,expText); const exp=JSON.parse(expText); assert.strictEqual(exp.v,1); assert.strictEqual(exp.month,mLater-1); assert.match(await p.$eval('#status',e=>e.textContent),/내려받았다/);
-  await p.evaluate(`${H}.step(5)`); p.once('dialog',d=>d.accept()); await p.setInputFiles('#city-open',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('c.month'),mLater-1,'파일에서 불러오면 그 시점'); assert.match(await p.$eval('#status',e=>e.textContent),/파일에서 불러왔다/);
-  require('fs').writeFileSync('/tmp/sim-bad.dhcity','{"hello":1}'); await p.setInputFiles('#city-open','/tmp/sim-bad.dhcity'); await p.waitForTimeout(200); assert.match(await p.$eval('#status',e=>e.textContent),/도시 파일이 아니다/); assert.strictEqual(await G('c.month'),mLater-1);
-  // 첫 화면에서 파일 열기 → 바로 이어진다
-  await p.reload(); await p.evaluate(()=>localStorage.clear()); await p.reload(); await p.waitForTimeout(400); await p.evaluate(()=>document.querySelector('#stage').scrollIntoView({block:'center'})); assert.ok(await p.$eval('#resume',e=>e.hidden),'비운 뒤 이어 하기 없음'); // 첫 reload 때 떠나며 저절로 저장되므로 비운 뒤 한 번 더 연다 assert.ok(await p.$eval('#city-load',e=>e.disabled),'저장 없으면 불러오기 잠김');
-  await p.setInputFiles('#city-open-ready',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('S.ready'),false); assert.strictEqual(await G('c.month'),mLater-1); assert.strictEqual(await G('c.funds'),exp.funds); ok('저장 단추 · 불러오기(확인·취소) · .dhcity 내려받기·열기 · 잘못된 파일 · 첫 화면 파일 열기');
+  await p.click('#city-save'); await mi('파일로 내려받기'); const expName=await p.evaluate('window.__lastName'); assert.match(expName,/^donghyunsim-.*\.dhsave$/,'파일 이름 '+expName); const expText=await p.evaluate('window.__lastBlob.text()'); require('fs').writeFileSync(fpath,expText); const exp=JSON.parse(expText); assert.strictEqual(exp.format,'donghyunsim-save'); assert.strictEqual(exp.state.month,mSave); assert.match(await p.$eval('#status',e=>e.textContent),/내려받았다/);
+  await p.evaluate(`${H}.step(5)`); await p.click('#city-load'); await mi('파일에서 불러오기'); await p.setInputFiles('#load-file',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('c.month'),mSave,'파일에서 불러오면 그 시점');
+  await p.evaluate(`${H}.step(2)`); require('fs').writeFileSync('/tmp/sim-bad.dhsave','{"hello":1}'); await p.setInputFiles('#load-file','/tmp/sim-bad.dhsave'); await p.waitForTimeout(200); assert.match(await p.$eval('#status',e=>e.textContent),/불러오기 실패: 동현심 저장 파일이 아니다/); assert.strictEqual(await G('c.month'),mSave+2);
+  // 칸 지우기 메뉴
+  await p.click('#city-save'); await mi('칸 지우기'); assert.match(await menuText(),/^칸 지우기/); await mi('브라우저 칸 2'); await mi('지운다'); assert.strictEqual(await p.evaluate(()=>localStorage.getItem('donghyunsim:slot2')),null,'칸 2 지움'); assert.match(await menuText(),/^칸 지우기/); await mi('돌아가기'); await mi('돌아가기'); assert.strictEqual(await menuText(),'');
+  ok('저장 메뉴 · 덮어쓰기 확인 · 불러오기 확인·취소 · .dhsave 내려받기·열기 · 잘못된 파일 · 칸 지우기 · 메뉴 동안 멎음');
+  // 11b) 첫 화면의 칸 목록: 저절로 저장되지 않고, 칸 1만 차 있고, 눌러 불러오며, 지우기는 두 번
+  await p.reload(); await p.waitForTimeout(400); await p.evaluate(()=>document.querySelector('#stage').scrollIntoView({block:'center'})); assert.strictEqual(await G('S.ready'),true);
+  assert.deepStrictEqual(await p.evaluate(()=>[1,2,3].map(n=>!!localStorage.getItem('donghyunsim:slot'+n))),[true,false,false],'떠날 때 저절로 저장되지 않는다');
+  assert.ok(!(await p.$eval('#load-box',e=>e.hidden)),'첫 화면에 칸 목록'); assert.deepStrictEqual(await p.$$eval('.slot-btn',a=>a.map(b=>b.disabled)),[false,true,true]); assert.strictEqual((await p.$$('.slot-del')).length,1);
+  assert.match(await p.$eval('.slot-btn',e=>e.textContent),/칸 1.*년차.*인구/);
+  await p.click('.slot-del'); assert.ok(await p.$eval('.slot-del',e=>e.classList.contains('armed')&&e.textContent==='정말 지운다'),'첫 누름은 무장만'); assert.ok(await p.evaluate(()=>!!localStorage.getItem('donghyunsim:slot1')));
+  await p.click('.slot-btn'); assert.strictEqual(await G('S.ready'),false); assert.strictEqual(await G('c.month'),mSave); assert.strictEqual(await G('c.funds'),exp.state.funds); assert.ok(await p.$eval('#load-box',e=>e.hidden));
+  await p.click('.sim-speed button[data-speed="0"]');
+  await p.reload(); await p.waitForTimeout(400); await p.evaluate(()=>document.querySelector('#load-box').scrollIntoView({block:'center'})); await p.click('.slot-del'); await p.click('.slot-del'); assert.strictEqual(await p.evaluate(()=>localStorage.getItem('donghyunsim:slot1')),null,'두 번 누르면 지워진다'); assert.strictEqual((await p.$$('.slot-del')).length,0);
+  await p.setInputFiles('#load-file-setup',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('S.ready'),false); assert.strictEqual(await G('c.month'),mSave); ok('첫 화면 칸 목록 · 눌러 불러오기 · 지우기 두 번 · 파일에서 불러오기');
+  await p.evaluate(()=>document.querySelector('#stage').scrollIntoView({block:'center'})); await p.click('.sim-speed button[data-speed="0"]');
   // 12) 전체 화면 단추 → fs 상태, 닫기 단추로 돌아온다. 판이 넓어진다
   const w0=(await bb()).w; await p.click('#full'); await p.waitForTimeout(500); assert.ok(await G('S.isFull()')); assert.ok(!(await p.$eval('#exit-full',e=>e.hidden))); assert.ok((await bb()).w>w0,'전체 화면에서 판이 넓다');
   await p.click('#exit-full'); await p.waitForTimeout(400); assert.ok(!(await G('S.isFull()'))); assert.ok(Math.abs((await bb()).w-w0)<2); ok('전체 화면: 켜고 끄기');
-  // 13) 다른 탭을 보면 멎고 저장된다
-  await p.click('.sim-speed button[data-speed="1"]'); await p.evaluate(()=>{ localStorage.removeItem('donghyunsim.save'); Object.defineProperty(document,'hidden',{get:()=>true,configurable:true}); document.dispatchEvent(new Event('visibilitychange')); });
-  assert.strictEqual(await G('S.paused'),true); assert.ok(await p.evaluate(()=>!!localStorage.getItem('donghyunsim.save')),'숨길 때 저장'); const m2=await G('c.month'); await p.waitForTimeout(1200); assert.strictEqual(await G('c.month'),m2);
-  await p.evaluate(()=>{ Object.defineProperty(document,'hidden',{get:()=>false,configurable:true}); document.dispatchEvent(new Event('visibilitychange')); }); assert.strictEqual(await G('S.paused'),false); ok('숨기면 멎고 저장');
+  // 13) 다른 탭을 보면 멎는다(저절로 저장하지는 않는다)
+  await p.click('.sim-speed button[data-speed="1"]'); await p.evaluate(()=>{ Object.defineProperty(document,'hidden',{get:()=>true,configurable:true}); document.dispatchEvent(new Event('visibilitychange')); });
+  assert.strictEqual(await G('S.paused'),true); assert.deepStrictEqual(await p.evaluate(()=>[1,2,3].map(n=>!!localStorage.getItem('donghyunsim:slot'+n))),[false,false,false],'숨길 때 저절로 저장하지 않는다'); const m2=await G('c.month'); await p.waitForTimeout(1200); assert.strictEqual(await G('c.month'),m2);
+  await p.evaluate(()=>{ Object.defineProperty(document,'hidden',{get:()=>false,configurable:true}); document.dispatchEvent(new Event('visibilitychange')); }); assert.strictEqual(await G('S.paused'),false); ok('숨기면 멎는다');
   // 14) 시리즈 띠: 13개 · 한 줄(1280)
   assert.strictEqual(await p.$eval('.series-links',e=>e.children.length),13); assert.ok((await p.$eval('.series-links',e=>e.getBoundingClientRect().height))<70,'한 줄');
   assert.strictEqual(await p.$eval('.series-item.is-current .series-name',e=>e.textContent.replace('™','')),'동현심'); ok('시리즈 띠 13 · 한 줄');

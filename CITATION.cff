@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata below."
 title: "Donghyunsim (동현심): a small city-building laboratory in the manner of SimCity DS, with the starting funds and the event/disaster switches set through the esoteric language Donghyun-lang"
 type: software
-version: "0.02"
+version: "0.03"
 doi: "10.5281/zenodo.24050245"
 date-released: "2026-11-08"
 authors:

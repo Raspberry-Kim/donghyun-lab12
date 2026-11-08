@@ -94,29 +94,63 @@ function refreshToolCost(){ if(!city) return; toolsEl.querySelectorAll('button')
 /* ---------- 상태 ---------- */
 let city=null, settings={fundsOpt:1,events:true,disasters:true}, ready=true, speed=1, paused=false, pauseWhy='', view='base';
 const SPEED_MS=[0,1000,500,220];
-let acc=0, now=0, sinceSave=0;
-const KEY='donghyunsim.save';
-function save(){ if(!city) return false; try{ localStorage.setItem(KEY,JSON.stringify(Object.assign(city.snapshot(),{savedAt:Date.now()}))); sinceSave=0; return true; }catch(e){ return false; } }
-function loadSaved(){ try{ const s=JSON.parse(localStorage.getItem(KEY)||'null'); return s&&s.v===1&&s.grid?s:null; }catch(e){ return null; } }
-function clearSaved(){ try{ localStorage.removeItem(KEY); }catch(e){} }
-/* 손으로 저장·불러오기·파일 */
-function fileRow(){ const has=!!loadSaved(), playing=!!city&&!ready; $('#city-save').disabled=!playing; $('#city-export').disabled=!playing; $('#city-load').disabled=!has;
-  $('#city-load').textContent=has?'저장한 도시 불러오기':'저장한 도시 없음'; }
-function saveNow(){ if(!city||ready) return false; const ok=save(); fileRow(); if(ok){ status(`저장했다 · ${city.title} · ${city.dateText()}`); SND.play('coin'); } else status('저장하지 못했다 · 브라우저 저장 공간을 확인한다','error'); return ok; }
-function loadNow(){ const s=loadSaved(); if(!s) return false;
-  if(city&&!ready&&sinceSave>0&&!confirm('지금 도시를 두고 저장한 도시를 불러온다. 저장하지 않은 달은 사라진다.')) return false;
-  return resumeSaved(); }
-function exportCity(){ if(!city||ready) return false; const snap=Object.assign(city.snapshot(),{savedAt:Date.now(),app:'donghyunsim'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(snap)],{type:'application/json'})); a.download=`donghyunsim-${city.title}-${Math.floor(city.month/12)+1}년차.dhcity`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  status(`.dhcity 파일로 내려받았다 · ${city.title} · ${city.dateText()}`); SND.play('coin'); return true; }
-async function importCity(file){ if(!file) return false; let s; try{ s=JSON.parse(await file.text()); }catch(e){ status('도시 파일이 아니다 · 동현심이 내려받은 .dhcity 파일을 고른다','error'); SND.play('buzz'); return false; }
-  if(!s||s.v!==1||!s.grid||!Array.isArray(s.zones)){ status('도시 파일이 아니다 · 동현심이 내려받은 .dhcity 파일을 고른다','error'); SND.play('buzz'); return false; }
-  let c; try{ c=City.restore(s); }catch(e){ status('도시 파일을 읽지 못했다 · '+e.message,'error'); SND.play('buzz'); return false; }
-  if(city&&!ready&&sinceSave>0&&!confirm('지금 도시를 두고 파일의 도시를 불러온다. 저장하지 않은 달은 사라진다.')) return false;
-  try{ localStorage.setItem(KEY,JSON.stringify(Object.assign(c.snapshot(),{savedAt:Date.now()}))); }catch(e){}
-  const ok=resumeSaved(); if(ok){ status(`파일에서 불러왔다 · ${city.title} · ${city.dateText()}`); SND.play('good'); } return ok; }
-$('#city-save').onclick=()=>saveNow(); $('#city-load').onclick=()=>loadNow(); $('#city-export').onclick=()=>exportCity();
-for(const id of ['#city-open','#city-open-ready']) $(id).onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; await importCity(f); };
+let acc=0, now=0;
+/* ---------- 저장·불러오기: 동현전·동현워·동현몬과 같은 브라우저 칸 3개 + .dhsave 파일. 마우스·터치용 메뉴 ---------- */
+const SAVE_FORMAT='donghyunsim-save', SAVE_VERSION=1, SLOT_KEY=n=>'donghyunsim:slot'+n, SLOTS=3;
+let menu=null;
+function snapshot(){ return {format:SAVE_FORMAT,version:SAVE_VERSION,savedAt:new Date().toISOString(),summary:{title:city.title,pop:city.pop,year:Math.floor(city.month/12)+1,funds:city.funds,date:city.dateText()},state:city.snapshot()}; }
+function restore(data){
+  if(!data||data.format!==SAVE_FORMAT) throw new Error('동현심 저장 파일이 아니다.');
+  if(data.version!==SAVE_VERSION) throw new Error('지원하지 않는 저장 형식 버전이다('+data.version+').');
+  const st=data.state; if(!st||st.v!==1||!st.grid||!Array.isArray(st.zones)) throw new Error('도시 정보가 맞지 않는다.');
+  const c=City.restore(st);
+  closeMenu(); city=c; settings={fundsOpt:city.fundsOpt,events:city.events,disasters:city.disasters}; setCard(settings);
+  ready=false; acc=0; paused=false; pauseWhy=''; ghost=null; hideInfo(); $('#ready').hidden=true; newsEl.innerHTML=''; for(const m of (city.log||[]).slice(-4)) addNews(m,true);
+  fitAll(); setSpeed(1,true); renderHud(); layout(); draw(); fileRow(); status(`${city.title} · 인구 ${city.pop.toLocaleString()} · ${city.dateText()}부터 이어 한다`);
+  result(`저장한 도시를 이어 한다 · ${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)} (저장될 때의 설정)`); SND.play('good');
+}
+function readSlot(n){ try{ const t=localStorage.getItem(SLOT_KEY(n)); const d=t?JSON.parse(t):null; return d&&d.format===SAVE_FORMAT?d:null; }catch(e){ return null; } }
+function slotNote(d){ if(!d) return '비어 있음'; const t=new Date(d.savedAt); const pad=v=>String(v).padStart(2,'0'); return `${d.summary.title} · ${d.summary.date} · ${t.getMonth()+1}/${t.getDate()} ${pad(t.getHours())}:${pad(t.getMinutes())}`; }
+function slotSmall(d){ return `인구 ${Number(d.summary.pop).toLocaleString('ko-KR')} · ${Number(d.summary.funds).toLocaleString('ko-KR')}냥`; }
+function toast(t,kind){ status(t,kind); addNews(t,true); }
+function saveToSlot(n){ if(!city||ready) return false; try{ localStorage.setItem(SLOT_KEY(n),JSON.stringify(snapshot())); toast(`브라우저 칸 ${n}에 저장했다 · ${city.dateText()}`); SND.play('coin'); renderSlotList(); return true; } catch(e){ toast('브라우저 저장에 실패했다. 파일로 내려받아 저장하자.','error'); SND.play('buzz'); return false; } }
+function deleteSlot(n){ try{ localStorage.removeItem(SLOT_KEY(n)); }catch(e){} renderSlotList(); }
+function saveToFile(){ if(!city||ready) return false; const d=snapshot(), a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'})); a.download=`donghyunsim-${city.title}-${d.summary.year}년차.dhsave`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast(`.dhsave 파일로 내려받았다 · ${city.title} · ${city.dateText()}`); SND.play('coin'); return true; }
+function loadFrom(d){ try{ restore(d); return true; }catch(e){ const msg='불러오기 실패: '+e.message; if(city&&!ready) toast(msg,'error'); else { result(msg,'error'); status('불러오기 실패','error'); } SND.play('buzz'); return false; } }
+async function loadFile(input){ const f=input.files[0]; input.value=''; if(!f) return false; let d=null; try{ d=JSON.parse(await f.text()); }catch(e){} return loadFrom(d); }
+/* 메뉴: 판 가운데 떠서 누르는 것으로만 고른다. 열려 있는 동안 달은 멎는다 */
+function openMenu(title,items,onCancel){ menu={title,items:items.map(it=>Array.isArray(it)?{label:it[0],fn:it[1]}:it),onCancel}; drawMenu(); }
+function drawMenu(){ const m=$('#menu'); if(!menu){ m.hidden=true; return; } m.hidden=false; m.innerHTML=(menu.title?`<h4>${esc(menu.title)}</h4>`:'')+menu.items.map((it,i)=>`<div class="mi ${it.off?'off':''}" role="menuitem" data-i="${i}"><span>${esc(it.label)}</span>${it.note?`<small>${esc(it.note)}</small>`:''}</div>`).join(''); m.querySelectorAll('.mi').forEach(el=>el.onclick=()=>{ const it=menu.items[+el.dataset.i]; if(!it||it.off) return; closeMenu(); it.fn(); }); draw(); }
+function closeMenu(){ menu=null; $('#menu').hidden=true; acc=0; draw(); }
+function cancelMenu(){ const c=menu&&menu.onCancel; closeMenu(); if(c) c(); }
+function confirmMenu(q,opts,back){ openMenu(q,opts.map(([label,fn])=>({label,fn})),back); }
+function saveMenu(){ if(!city||ready) return; const items=[];
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); items.push({label:`브라우저 칸 ${n}`,note:slotNote(d),fn:()=>{ if(d) confirmMenu(`칸 ${n}에 덮어쓸까?`,[['덮어쓴다',()=>saveToSlot(n)],['그만둔다',saveMenu]],saveMenu); else saveToSlot(n); }}); }
+  items.push({label:'파일로 내려받기',note:'.dhsave',fn:saveToFile},{label:'칸 지우기',fn:deleteMenu},['돌아가기',()=>{}]);
+  openMenu('저장',items); }
+function deleteMenu(){ const items=[];
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); items.push({label:`브라우저 칸 ${n}`,note:slotNote(d),off:!d,fn:()=>confirmMenu(`칸 ${n}${n===2?'를':'을'} 지울까? 되돌릴 수 없다.`,[['지운다',()=>{ deleteSlot(n); toast(`브라우저 칸 ${n}${n===2?'를':'을'} 지웠다.`); deleteMenu(); }],['그만둔다',deleteMenu]],deleteMenu)}); }
+  items.push(['돌아가기',saveMenu]); openMenu('칸 지우기',items,saveMenu); }
+function loadMenu(){ if(!city||ready) return; const items=[];
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); items.push({label:`브라우저 칸 ${n}`,note:slotNote(d),off:!d,fn:()=>confirmMenu('지금 도시를 두고 불러올까? 저장하지 않은 달은 사라진다.',[['불러온다',()=>loadFrom(readSlot(n))],['그만둔다',loadMenu]],loadMenu)}); }
+  items.push({label:'파일에서 불러오기',note:'.dhsave',fn:()=>$('#load-file').click()},['돌아가기',()=>{}]);
+  openMenu('불러오기',items); }
+function fileRow(){ const playing=!!city&&!ready; $('#city-save').disabled=!playing; $('#city-load').disabled=!playing; $('#load-box').hidden=playing; if(!playing) renderSlotList(); }
+function renderSlotList(){
+  const box=$('#slot-list'); if(!box) return; box.innerHTML='';
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); const b=document.createElement('button'); b.className='slot-btn'; b.type='button'; b.disabled=!d;
+    b.innerHTML=`<b>칸 ${n}</b><span>${esc(slotNote(d))}</span>${d?`<small>${esc(slotSmall(d))}</small>`:''}`;
+    b.onclick=()=>loadFrom(readSlot(n));
+    const row=document.createElement('div'); row.className='slot-row'; row.append(b);
+    if(d){ const x=document.createElement('button'); x.className='slot-del'; x.type='button'; x.textContent='지우기'; x.setAttribute('aria-label',`칸 ${n} 지우기`);
+      let t=0; x.onclick=()=>{ if(!x.classList.contains('armed')){ x.classList.add('armed'); x.textContent='정말 지운다'; t=setTimeout(()=>{ x.classList.remove('armed'); x.textContent='지우기'; },4000); return; }
+        clearTimeout(t); deleteSlot(n); status(`브라우저 칸 ${n}${n===2?'를':'을'} 지웠다.`); };
+      row.append(x); }
+    box.append(row); }
+}
+$('#city-save').onclick=()=>saveMenu(); $('#city-load').onclick=()=>loadMenu();
+$('#load-file').onchange=e=>loadFile(e.target); $('#load-file-setup').onchange=e=>loadFile(e.target);
+$('#menu-back').addEventListener('click',e=>{ if(e.target===e.currentTarget) cancelMenu(); });
 
 /* ---------- 판·카메라 ---------- */
 const board=$('#board'), g=board.getContext('2d'), stage=$('#stage'), mainEl=$('.sim-main');
@@ -201,7 +235,7 @@ function draw(){
   if(ghost){ const n=ghost.big?3:1, px=px0(ghost.x), py=py0(ghost.y); g.lineWidth=Math.max(2,ts/5); g.strokeStyle=ghost.ok?'rgba(63,174,82,.95)':'rgba(214,64,58,.95)'; g.fillStyle=ghost.ok?'rgba(63,174,82,.22)':'rgba(214,64,58,.22)';
     g.fillRect(px,py,ts*n,ts*n); g.strokeRect(px+1,py+1,ts*n-2,ts*n-2); }
   g.restore();
-  if(paused&&!ready){ g.fillStyle='rgba(20,18,14,.55)'; g.fillRect(0,0,cssW,cssH); g.fillStyle='#fff'; g.font=`700 ${Math.round(Math.min(cssW,cssH)/16)}px ${getComputedStyle(document.body).getPropertyValue('--display')||'sans-serif'}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(speed===0?'멈춤':'잠시 멎음',cssW/2,cssH/2-14); g.font=`500 13px ${getComputedStyle(document.body).getPropertyValue('--body')||'sans-serif'}`; g.fillText(pauseWhy||'▶ 단추를 누르면 달이 흐른다',cssW/2,cssH/2+18); }
+  if((paused||menu)&&!ready){ g.fillStyle='rgba(20,18,14,.55)'; g.fillRect(0,0,cssW,cssH); if(menu) return; g.fillStyle='#fff'; g.font=`700 ${Math.round(Math.min(cssW,cssH)/16)}px ${getComputedStyle(document.body).getPropertyValue('--display')||'sans-serif'}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(speed===0?'멈춤':'잠시 멎음',cssW/2,cssH/2-14); g.font=`500 13px ${getComputedStyle(document.body).getPropertyValue('--body')||'sans-serif'}`; g.fillText(pauseWhy||'▶ 단추를 누르면 달이 흐른다',cssW/2,cssH/2+18); }
 }
 function drawOverlay(x0,y0,x1,y1,ts,px0,py0){ const m=city.maps;
   for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++){ const c=city.grid[y][x], i=y*W+x, px=px0(x), py=py0(y); let col=null;
@@ -227,40 +261,30 @@ function addNews(m,quiet){ const li=document.createElement('li'); li.className='
   if(quiet) return; if(m.kind==='bad') SND.play(/라이언|넘쳤/.test(m.text)?'rumble':'alarm'); else if(m.kind==='good') SND.play(/기부/.test(m.text)?'coin':'good'); else if(/결산/.test(m.text)) SND.play('coin'); else if(m.kind==='warn') SND.play('buzz'); }
 function handleMsgs(quiet){ for(const m of city.takeMsgs()) addNews(m,quiet); }
 
-/* ---------- 새 도시·이어 하기 ---------- */
+/* ---------- 새 도시 ---------- */
 function newCity(opts){
-  city=new City({fundsOpt:settings.fundsOpt,events:settings.events,disasters:settings.disasters}); ready=!!(opts&&opts.ready); acc=0; sinceSave=0; paused=false; pauseWhy=''; ghost=null; hideInfo();
+  city=new City({fundsOpt:settings.fundsOpt,events:settings.events,disasters:settings.disasters}); ready=!!(opts&&opts.ready); acc=0; paused=false; pauseWhy=''; ghost=null; hideInfo();
   newsEl.innerHTML=''; handleMsgs(true); fitAll(); setSpeed(1,true);
   $('#ready').hidden=!ready;
-  if(ready){ const s=loadSaved(); $('#ready-note').textContent=`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}`;
-    $('#resume').hidden=!s; $('#resume').textContent=s?`이어 하기 · ${s.title} ${(s.pop||popOf(s)).toLocaleString()}명 · ${Math.floor(s.month/12)+1}년차`:''; 
-    $('#ready-hint').textContent=s?'새 도시를 시작하면 저장된 도시는 지워진다':'시작하면 달이 흐른다 · 저장은 이 브라우저에 남고 파일로도 내려받을 수 있다'; }
+  if(ready){ $('#ready-note').textContent=`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}`; }
   renderHud(); layout(); draw(); fileRow();
   status(ready?`새 도시 시작을 누르면 ${FUNDS_LABEL[settings.fundsOpt]}으로 시작한다`:toolHint(tool));
 }
-function popOf(s){ let R=0; for(const z of s.zones||[]) if(z&&z.kind==='R') R+=z.lv; return R*Sim.POP_PER_LV; }
-function begin(){ if(!ready||!city) return; ready=false; $('#ready').hidden=true; clearSaved(); acc=0; status(toolHint(tool)); SND.play('build'); fileRow(); }
-function resumeSaved(){ const s=loadSaved(); if(!s) return false;
-  try{ city=City.restore(s); }catch(e){ clearSaved(); return false; }
-  settings={fundsOpt:city.fundsOpt,events:city.events,disasters:city.disasters}; setCard(settings);
-  ready=false; acc=0; sinceSave=0; paused=false; pauseWhy=''; ghost=null; $('#ready').hidden=true; newsEl.innerHTML=''; for(const m of (city.log||[]).slice(-4)) addNews(m,true);
-  fitAll(); setSpeed(1,true); renderHud(); layout(); draw(); fileRow(); status(`${city.title} · 인구 ${city.pop.toLocaleString()} · ${city.dateText()}부터 이어 한다`);
-  result(`저장된 도시를 이어 한다 · ${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)} (저장될 때의 설정)`); return true; }
-$('#begin').onclick=()=>begin(); $('#resume').onclick=()=>resumeSaved();
+function begin(){ if(!ready||!city) return; ready=false; $('#ready').hidden=true; acc=0; status(toolHint(tool)); SND.play('build'); fileRow(); }
+$('#begin').onclick=()=>begin();
 
 /* ---------- 속도·멎음 ---------- */
-function setSpeed(n,quiet){ speed=n; document.querySelectorAll('.sim-speed button').forEach(b=>b.classList.toggle('on',+b.dataset.speed===n)); if(!quiet){ SND.play('tick'); if(city&&!ready) status(n===0?'멈춤 · ▶를 누르면 달이 흐른다':n===1?'보통 · 한 달에 1초':n===2?'빠름 · 한 달에 0.5초':'아주 빠름 · 한 달에 0.22초'); } if(n===0&&city&&!ready) save(); }
+function setSpeed(n,quiet){ speed=n; document.querySelectorAll('.sim-speed button').forEach(b=>b.classList.toggle('on',+b.dataset.speed===n)); if(!quiet){ SND.play('tick'); if(city&&!ready) status(n===0?'멈춤 · ▶를 누르면 달이 흐른다':n===1?'보통 · 한 달에 1초':n===2?'빠름 · 한 달에 0.5초':'아주 빠름 · 한 달에 0.22초'); }}
 document.querySelectorAll('.sim-speed button').forEach(b=>b.addEventListener('click',()=>setSpeed(+b.dataset.speed)));
-function pause(why){ if(!paused){ paused=true; pauseWhy=why; if(city&&!ready) save(); } }
+function pause(why){ if(!paused){ paused=true; pauseWhy=why; } }
 function unpause(){ if(paused){ paused=false; pauseWhy=''; acc=0; } }
 document.addEventListener('visibilitychange',()=>{ if(document.hidden) pause('다른 탭을 보는 동안 달이 멎었다'); else unpause(); });
-addEventListener('pagehide',()=>{ if(city&&!ready) save(); });
 
 /* ---------- 달 흐름 ---------- */
-function step(){ city.tick(); handleMsgs(); renderHud(); if(++sinceSave>=6){ save(); fileRow(); } }
+function step(){ city.tick(); handleMsgs(); renderHud(); }
 let last=0;
 function loop(ts){ requestAnimationFrame(loop); now=ts; const dt=last?Math.min(100,ts-last):0; last=ts;
-  if(city&&!ready&&!paused&&speed>0){ acc+=dt; let n=0; while(acc>=SPEED_MS[speed]&&n<3){ acc-=SPEED_MS[speed]; step(); n++; } }
+  if(city&&!ready&&!paused&&!menu&&speed>0){ acc+=dt; let n=0; while(acc>=SPEED_MS[speed]&&n<3){ acc-=SPEED_MS[speed]; step(); n++; } }
   draw(); }
 requestAnimationFrame(loop);
 
@@ -284,7 +308,7 @@ let infoTimer=0;
 function showInfo(c){ if(!city) return; const t=city.describe(c.x,c.y); if(!t) return; const el=$('#info'); el.innerHTML=`<b>(${c.x}, ${c.y})</b> ${t}`; el.hidden=false; clearTimeout(infoTimer); infoTimer=setTimeout(hideInfo,5000); }
 function hideInfo(){ const el=$('#info'); if(el) el.hidden=true; }
 board.addEventListener('contextmenu',e=>e.preventDefault());
-board.addEventListener('pointerdown',e=>{ if(!city||ready) return; e.preventDefault(); board.setPointerCapture(e.pointerId); const c=cellOf(e); pointers.set(e.pointerId,{px:c.px,py:c.py});
+board.addEventListener('pointerdown',e=>{ if(!city||ready||menu) return; e.preventDefault(); board.setPointerCapture(e.pointerId); const c=cellOf(e); pointers.set(e.pointerId,{px:c.px,py:c.py});
   if(pointers.size===2){ // 두 손가락: 어떤 도구든 옮기기·늘리기
     const [a,b]=[...pointers.values()]; pinch={d:Math.hypot(a.px-b.px,a.py-b.py),mx:(a.px+b.px)/2,my:(a.py+b.py)/2,zoom:cam.zoom,cx:cam.x,cy:cam.y}; mode='pinch'; ghost=null; pendingPaint=false; return; }
   if(pointers.size>2) return;
@@ -312,7 +336,7 @@ function endPointer(e,cancel){ if(!pointers.has(e.pointerId)) return; const c=ce
   board.classList.remove('panning'); mode=null; lastCell=null; if(e.pointerType!=='mouse') ghost=null; else updateGhost(c); }
 board.addEventListener('pointerup',e=>endPointer(e,false)); board.addEventListener('pointercancel',e=>endPointer(e,true));
 board.addEventListener('pointerleave',e=>{ if(!pointers.has(e.pointerId)) ghost=null; });
-board.addEventListener('wheel',e=>{ if(!city) return; e.preventDefault(); const c=cellOf(e); setZoom(cam.zoom*Math.pow(1.0015,-e.deltaY),c.px,c.py); },{passive:false});
+board.addEventListener('wheel',e=>{ if(!city||menu) return; e.preventDefault(); const c=cellOf(e); setZoom(cam.zoom*Math.pow(1.0015,-e.deltaY),c.px,c.py); },{passive:false});
 $('#zoom-in').onclick=()=>{ setZoom(cam.zoom*1.5); SND.play('tick'); }; $('#zoom-out').onclick=()=>{ setZoom(cam.zoom/1.5); SND.play('tick'); }; $('#zoom-fit').onclick=()=>{ fitAll(); SND.play('tick'); };
 $('#ready').addEventListener('click',e=>{ if(e.target===e.currentTarget) begin(); });
 
@@ -340,9 +364,9 @@ function start(opts){
   settings={fundsOpt:p.fundsOpt,events:p.events,disasters:p.disasters}; setCard(settings);
   const rdy=!!(opts&&opts.ready);
   result((p.note?p.note+' ':'')+(rdy?`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}. 판의 단추를 누르면 시작한다.`:`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}으로 새 도시를 시작했다. 발전소를 세우고 길을 깔아 보자.`));
-  newCity({ready:rdy}); if(!rdy) clearSaved(); return true;
+  newCity({ready:rdy}); return true;
 }
 setTool('road'); start({ready:true});
 window.__donghyunsim={get city(){return city;},get ready(){return ready;},get settings(){return settings;},get tool(){return tool;},setTool,get cam(){return cam;},setZoom,fitAll,get speed(){return speed;},setSpeed,get paused(){return paused;},
-  begin,start,newCity,resumeSaved,save,loadSaved,clearSaved,saveNow,loadNow,exportCity,importCity,parseSet,applyAt,step:(n=1)=>{ for(let i=0;i<n&&city&&!ready;i++) step(); draw(); },get view(){return view;},isFull,get ghost(){return ghost;},cellOf,draw};
+  begin,start,newCity,snapshot,restore,readSlot,saveToSlot,deleteSlot,saveToFile,loadFrom,saveMenu,loadMenu,closeMenu,get menu(){return menu;},parseSet,applyAt,step:(n=1)=>{ for(let i=0;i<n&&city&&!ready;i++) step(); draw(); },get view(){return view;},isFull,get ghost(){return ghost;},cellOf,draw};
 })();

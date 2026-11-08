@@ -275,13 +275,41 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
 .sim-file{flex-wrap:wrap;align-items:center}
 .sim-file button:disabled{opacity:.5;cursor:default}
 .sim-file-note{font:var(--text-xs) var(--body);color:var(--muted);flex:1 1 100%;margin-top:2px}
-.sim-open-label{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid #f3f0e4;font-family:var(--body);line-height:1.2;-webkit-tap-highlight-color:transparent}
+
+/* 저장·불러오기: 동현전·동현워·동현몬과 같은 칸 목록과 메뉴 */
+.menu-back{position:absolute;inset:0;z-index:5;pointer-events:none}
+.menu-back:has(.game-menu:not([hidden])){pointer-events:auto}
+.game-menu{position:absolute;min-width:150px;background:var(--paper);border:2px solid var(--ink);border-radius:8px;box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:6px;line-height:1.4;z-index:6;max-height:92%;overflow:auto;text-align:left}
+.game-menu[hidden]{display:none}
+.game-menu h4{margin:2px 6px 6px;font:700 var(--text-xs) var(--body);color:var(--muted);white-space:normal;line-height:1.5}
+.game-menu .mi{display:flex;justify-content:space-between;gap:14px;padding:10px 10px;border-radius:5px;font-size:var(--text-sm);cursor:pointer;white-space:nowrap;min-height:44px;align-items:center}
+.game-menu .mi:hover{background:var(--surface2)}
+.game-menu .mi:active{background:var(--accent);color:#26211c;font-weight:700}
+.game-menu .mi.off{opacity:.45;cursor:default}
+.game-menu .mi.off:hover{background:none}
+.game-menu .mi small{font-family:var(--mono);color:inherit;opacity:.8;white-space:normal;text-align:right}
+.game-menu.center{left:50%;top:50%;transform:translate(-50%,-50%);min-width:240px;max-width:92%}
+.game-menu,.menu-back{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.load-box{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.load-box[hidden]{display:none}
+.load-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:var(--text-xs)}
+.slot-list{display:grid;gap:6px}
+.slot-btn{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:baseline;text-align:left;min-height:44px;padding:8px 12px;font-size:var(--text-xs)}
+.slot-btn b{font-weight:700}.slot-btn small{grid-column:2;color:var(--muted)}
+.slot-btn:disabled{opacity:.55;cursor:default}
+.slot-row{display:grid;grid-template-columns:1fr auto;gap:6px}
+.slot-del{min-height:44px;padding:0 12px;font-size:var(--text-xs);color:var(--muted)}
+.slot-del.armed,.slot-del.armed:hover{color:#fff;background:var(--red);border-color:var(--red)}
+[data-theme=dark] .slot-del.armed{color:#191613}
+.slot-note{margin:8px 0 0;font-size:var(--text-xs);line-height:1.6;color:var(--muted)}.slot-note b{color:var(--ink);font-weight:600}
+.load-head label{cursor:pointer;border:1px solid var(--line);border-radius:6px;min-height:44px;padding:6px 12px;background:var(--paper);display:inline-flex;align-items:center;font:var(--text-xs) var(--body)}
+.load-head label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
 <header class="header">
   <a class="brand" href="#" aria-label="동현심 첫 화면으로"><span class="brand-main"><img class="brand-icon" src="data:image/png;base64,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" alt="" width="96" height="96">동현<span>심</span><sup>TM</sup></span><i class="brand-divider"></i><span class="brand-sub">CITY BUILDING LAB<small>강가 평지에 작은 도시를 세운다</small></span></a><a class="doi-badge" href="https://doi.org/10.5281/zenodo.24050245" target="_blank" rel="noopener" aria-label="동현심 Zenodo DOI 10.5281/zenodo.24050245" title="Zenodo DOI (모든 버전)"><b>DOI</b><span>10.5281/zenodo.24050245</span></a>
-  <div class="edition">v0.02<button id="sound" class="icon-btn" aria-label="효과음 켜기·끄기" title="효과음" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="snd-on" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="snd-off" d="m16 9 6 6m0-6-6 6"/></svg></button><button id="theme" class="icon-btn" aria-label="밝은 화면과 어두운 화면 전환" title="화면 전환" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></div>
+  <div class="edition">v0.03<button id="sound" class="icon-btn" aria-label="효과음 켜기·끄기" title="효과음" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="snd-on" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="snd-off" d="m16 9 6 6m0-6-6 6"/></svg></button><button id="theme" class="icon-btn" aria-label="밝은 화면과 어두운 화면 전환" title="화면 전환" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></div>
 </header>
 <main>
 <!-- SERIES-NAV-START -->
@@ -313,6 +341,7 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
             <div class="sim-view" role="group" aria-label="보기"><button data-view="base" class="on">기본</button><button data-view="power">전력</button><button data-view="pol">오염</button><button data-view="crime">범죄</button><button data-view="val">지가</button></div>
             <div class="sim-zoom"><button id="zoom-in" aria-label="확대">+</button><button id="zoom-out" aria-label="축소">−</button><button id="zoom-fit" aria-label="전체 보기" title="전체 보기">⤢</button></div>
             <div class="sim-info" id="info" hidden></div>
+            <div class="menu-back" id="menu-back"><div class="game-menu center" id="menu" role="menu" hidden></div></div>
           </div>
           <div class="sim-tools" id="tools" role="toolbar" aria-label="도구"></div>
           <ul class="sim-news" id="news" aria-live="polite" aria-label="소식"></ul>
@@ -321,19 +350,16 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
               <h3 id="ready-title">동현심</h3>
               <p id="ready-note">보통 20,000냥 · 이벤트 켬 · 재해 켬</p>
               <button id="begin" class="dh-btn dh-run">새 도시 시작</button>
-              <button id="resume" class="dh-btn sim-resume" hidden>이어 하기</button>
-              <label class="dh-btn sim-resume sim-open-label">도시 파일 열기<input id="city-open-ready" type="file" accept=".dhcity,.json,application/json" hidden></label>
-              <p class="sim-ready-hint" id="ready-hint">시작하면 달이 흐른다 · 저장은 이 브라우저에 남고 파일로도 내려받을 수 있다</p>
+              <p class="sim-ready-hint" id="ready-hint">시작하면 달이 흐른다 · 저장한 도시는 동현랭 코드 아래 <b>저장한 판 불러오기</b>에서 고른다</p>
             </div>
           </div>
         </div>
         <div class="file-row sim-file" aria-label="도시 저장과 불러오기">
-          <button id="city-save" disabled>도시 저장</button>
-          <button id="city-load" disabled>저장한 도시 불러오기</button>
-          <button id="city-export" disabled>.dhcity 내려받기</button>
-          <label class="file-label">.dhcity 열기<input id="city-open" type="file" accept=".dhcity,.json,application/json" hidden></label>
-          <span class="sim-file-note" id="city-note">저장은 이 브라우저 한 칸에 남고, 6달마다·멈출 때 저절로 저장된다. 파일로 내려받으면 다른 기기에서도 연다.</span>
+          <button id="city-save" disabled>저장</button>
+          <button id="city-load" disabled>불러오기</button>
+          <span class="sim-file-note" id="city-note">브라우저 칸 3개와 .dhsave 파일. 저장하지 않은 달은 창을 닫으면 사라진다.</span>
         </div>
+        <input id="load-file" type="file" accept=".dhsave,.json,application/json" hidden>
       </div>
       <div class="side-col">
         <div class="section-title"><h2><span>B</span> 동현랭 설정 코드</h2><span>sim.dh</span></div>
@@ -346,6 +372,7 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
         <div class="sortie-card" id="set-card"></div>
         <p id="result" aria-live="polite">예제를 고른 뒤 시작을 눌러 보자. 자금 옵션과 이벤트·재해는 코드로만 정한다.</p>
         <div class="file-row"><button id="save">.dh 저장</button><label class="file-label">.dh 열기<input id="open" type="file" accept=".dh,.txt,text/plain" hidden></label></div>
+        <div class="load-box" id="load-box"><div class="load-head"><strong>저장한 판 불러오기</strong><label class="file-label" tabindex="0">파일에서 불러오기<input id="load-file-setup" type="file" accept=".dhsave,.json,application/json" hidden></label></div><div class="slot-list" id="slot-list"></div><p class="slot-note">브라우저 칸 3개는 이 기기의 이 브라우저에만 남는다. 다른 기기나 브라우저로는 옮겨지지 않고, 사이트 데이터를 지우거나 사생활 보호 창을 닫으면 사라진다. Safari는 이 사이트를 7일 동안 열지 않으면 칸을 지울 수 있다. 오래 둘 도시는 <b>.dhsave</b> 파일로 내려받아 두자. 필요 없는 칸은 <b>지우기</b>를 두 번 눌러 비운다.</p></div>
       </div>
     </div>
     <div class="workflow"><span>동현랭 코드</span><b>→</b><span>자금 · 이벤트 · 재해</span><b>→</b><span>시작</span><b>→</b><span>발전소 · 길 · 구역 · 전선</span><b>→</b><span>사람이 모이고 건물이 자란다</span><b>→</b><span>촌락에서 수도까지</span></div>
@@ -388,7 +415,7 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
         <h3>마우스와 손가락만으로</h3>
         <ul>
           <li>머리글 오른쪽의 네 아이콘(키보드·마우스·게임패드·전체 화면 FULL)은 입력 표식이다. 켜진 것만 이 실험실에서 쓸 수 있다: <b>마우스(터치) · 전체 화면</b>. 키보드와 게임패드는 판을 움직이지 않는다.</li>
-          <li>처음 열면 판 위에 <strong>새 도시 시작</strong> 단추가 떠 있고 달은 멎어 있다. 저장된 도시가 있으면 <strong>이어 하기</strong>도 보인다. 오른쪽 동현랭 코드의 시작을 누르면 그 설정으로 새 도시가 바로 시작된다.</li>
+          <li>처음 열면 판 위에 <strong>새 도시 시작</strong> 단추가 떠 있고 달은 멎어 있다. 저장한 도시가 있으면 동현랭 코드 아래 <strong>저장한 판 불러오기</strong>에 칸이 보인다. 오른쪽 동현랭 코드의 시작을 누르면 그 설정으로 새 도시가 바로 시작된다.</li>
           <li>판 아래 <strong>도구</strong>를 고른 뒤 판을 누른다. 길·전선·공원·철거는 누른 채 끌면 지나간 칸에 이어진다(손가락은 떼거나 움직이기 시작할 때 놓이므로, 두 번째 손가락이 바로 따라오면 아무것도 놓이지 않는다). 구역(주거·상업·공업)과 건물(발전소·경찰서·소방서)은 3×3이라 누르면 초록 테두리가 따라오고, 손을 떼는 자리에 놓인다. 빨간 테두리면 놓을 수 없다.</li>
           <li><strong>이동</strong> 도구로 판을 끌면 보는 자리가 옮겨진다. 어떤 도구를 쥐고 있어도 <strong>두 손가락</strong>으로 끌면 옮겨지고, 벌리면 커진다. 마우스는 바퀴로 늘리고 줄이며, 가운데 단추나 오른 단추로 끌면 옮겨진다. 판 오른쪽 아래의 +·−·⤢ 단추도 같다.</li>
           <li><strong>정보</strong> 도구로 칸을 누르면 그 칸이 무엇인지, 전기·길·지가·오염·치안이 어떤지 말해 준다.</li>
@@ -403,13 +430,13 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
           <li>공장은 오염을 내고, 오염이 높은 곳은 지가가 내려 집이 잘 자라지 않는다. 공업 구역은 주거에서 조금 떨어뜨리고 사이에 공원을 두면 좋다. 강과 나무도 지가를 올린다.</li>
           <li>사람이 늘면 범죄가 는다. <strong>경찰서</strong>는 둘레의 범죄를 누르고, <strong>소방서</strong>는 불이 번지는 것을 막고 빨리 끈다.</li>
           <li>돈이 모자라면 짓지 못한다. 달마다 세금이 들어오니 조금 기다리거나, 쓸모없는 길과 전선을 철거해 유지비를 줄인다.</li>
-          <li>위의 멈춤·보통·빠름·아주 빠름 단추로 달이 흐르는 빠르기를 바꾼다. 다른 탭을 보거나 창을 벗어나면 저절로 멎고, 도시는 이 브라우저에 저장된다.</li>
+          <li>위의 멈춤·보통·빠름·아주 빠름 단추로 달이 흐르는 빠르기를 바꾼다. 다른 탭을 보거나 창을 벗어나면 저절로 멎는다. 저장은 저절로 되지 않으니 판 아래 <strong>저장</strong>을 누른다.</li>
         </ul>
         <h3>저장과 불러오기</h3>
         <ul>
-          <li>판 아래 <strong>도시 저장</strong>을 누르면 지금 도시가 이 브라우저의 저장 칸에 남는다. 누르지 않아도 여섯 달마다, 그리고 멎을 때마다 저절로 저장된다. 저장 칸은 하나이고, 새 도시를 시작하면 비워진다.</li>
-          <li><strong>저장한 도시 불러오기</strong>는 저장 칸의 도시를 지금 판에 되살린다. 처음 열었을 때 보이는 <strong>이어 하기</strong>와 같은 일을 한다.</li>
-          <li><strong>.dhcity 내려받기</strong>는 도시를 파일 하나로 내려받는다. 다른 기기나 다른 브라우저에서 <strong>.dhcity 열기</strong>(첫 화면의 <strong>도시 파일 열기</strong>)로 고르면 그 도시가 이어진다. 파일 속 설정(자금·이벤트·재해)도 함께 따라온다.</li>
+          <li>판 아래 <strong>저장</strong>을 누르면 메뉴가 뜬다. <strong>브라우저 칸 1·2·3</strong> 가운데 하나를 고르면 지금 도시가 그 칸에 남고, 찬 칸은 덮어쓸지 한 번 더 묻는다. <strong>파일로 내려받기</strong>는 도시를 <b>.dhsave</b> 파일 하나로 내려받는다. 동현전·동현워·동현몬과 같은 방식이다. 저절로 저장되지는 않는다.</li>
+          <li><strong>불러오기</strong> 메뉴에서 칸을 고르면 그 도시가 지금 판에 되살아난다(저장하지 않은 달은 사라지니 한 번 더 묻는다). <strong>파일에서 불러오기</strong>로 .dhsave 파일을 고를 수도 있다. 파일 속 설정(자금·이벤트·재해)도 함께 따라온다. 메뉴가 열린 동안 달은 멎는다.</li>
+          <li>처음 화면에서는 동현랭 코드 아래 <strong>저장한 판 불러오기</strong>에 칸 세 개가 보인다. 찬 칸을 누르면 바로 이어지고, <strong>지우기</strong>는 두 번 눌러야 비워진다. 칸은 이 기기의 이 브라우저에만 남으니 오래 둘 도시는 .dhsave 파일로 내려받아 두자.</li>
         </ul>
         <h3>이벤트와 재해</h3>
         <ul>
@@ -446,7 +473,7 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
     <aside class="maker-note"><span class="eyebrow">만든 사람</span><p>인하대학교 의과대학 김동현 교수는 백신학·감염학을 연구한다. 명랑하고 따뜻한 개발을 지향한다.</p></aside>
   </section>
 </main>
-<footer><span>동현심 v0.02 · 인하대학교 의과대학 교수 김동현</span><span>작은 도시 · 자금·이벤트·재해만 동현랭으로</span><span><a href="https://raspberry-kim.github.io/donghyun-lang/" target="_blank" rel="noopener">동현랭</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lang" target="_blank" rel="noopener">동현랭 GitHub</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lab12" target="_blank" rel="noopener">동현심 GitHub</a> · <a href="https://raspberry-kim.github.io/donghyun-lab1/" target="_blank" rel="noopener">동현초</a> · <a href="https://raspberry-kim.github.io/donghyun-lab2/" target="_blank" rel="noopener">동현파</a> · <a href="https://raspberry-kim.github.io/donghyun-lab3/" target="_blank" rel="noopener">동현빌</a> · <a href="https://raspberry-kim.github.io/donghyun-lab4/" target="_blank" rel="noopener">동현전</a> · <a href="https://raspberry-kim.github.io/donghyun-lab5/" target="_blank" rel="noopener">동현콥</a> · <a href="https://raspberry-kim.github.io/donghyun-lab6/" target="_blank" rel="noopener">동현텐</a> · <a href="https://raspberry-kim.github.io/donghyun-lab7/" target="_blank" rel="noopener">동현워</a> · <a href="https://raspberry-kim.github.io/donghyun-lab8/" target="_blank" rel="noopener">동현둠</a> · <a href="https://raspberry-kim.github.io/donghyun-lab9/" target="_blank" rel="noopener">동현크</a> · <a href="https://raspberry-kim.github.io/donghyun-lab10/" target="_blank" rel="noopener">동현몬</a> · <a href="https://raspberry-kim.github.io/donghyun-lab11/" target="_blank" rel="noopener">동현주</a></span></footer>
+<footer><span>동현심 v0.03 · 인하대학교 의과대학 교수 김동현</span><span>작은 도시 · 자금·이벤트·재해만 동현랭으로</span><span><a href="https://raspberry-kim.github.io/donghyun-lang/" target="_blank" rel="noopener">동현랭</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lang" target="_blank" rel="noopener">동현랭 GitHub</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lab12" target="_blank" rel="noopener">동현심 GitHub</a> · <a href="https://raspberry-kim.github.io/donghyun-lab1/" target="_blank" rel="noopener">동현초</a> · <a href="https://raspberry-kim.github.io/donghyun-lab2/" target="_blank" rel="noopener">동현파</a> · <a href="https://raspberry-kim.github.io/donghyun-lab3/" target="_blank" rel="noopener">동현빌</a> · <a href="https://raspberry-kim.github.io/donghyun-lab4/" target="_blank" rel="noopener">동현전</a> · <a href="https://raspberry-kim.github.io/donghyun-lab5/" target="_blank" rel="noopener">동현콥</a> · <a href="https://raspberry-kim.github.io/donghyun-lab6/" target="_blank" rel="noopener">동현텐</a> · <a href="https://raspberry-kim.github.io/donghyun-lab7/" target="_blank" rel="noopener">동현워</a> · <a href="https://raspberry-kim.github.io/donghyun-lab8/" target="_blank" rel="noopener">동현둠</a> · <a href="https://raspberry-kim.github.io/donghyun-lab9/" target="_blank" rel="noopener">동현크</a> · <a href="https://raspberry-kim.github.io/donghyun-lab10/" target="_blank" rel="noopener">동현몬</a> · <a href="https://raspberry-kim.github.io/donghyun-lab11/" target="_blank" rel="noopener">동현주</a></span></footer>
 <script>/*! 동현랭 (Donghyun-lang) runtime — 브라우저와 Node 양쪽에서 동작한다.
  *  <script src="donghyun.js"><\/script>
  *  <script type="text/donghyun" data-input="5" data-output="html"> ... <\/script>
@@ -2577,29 +2604,63 @@ function refreshToolCost(){ if(!city) return; toolsEl.querySelectorAll('button')
 /* ---------- 상태 ---------- */
 let city=null, settings={fundsOpt:1,events:true,disasters:true}, ready=true, speed=1, paused=false, pauseWhy='', view='base';
 const SPEED_MS=[0,1000,500,220];
-let acc=0, now=0, sinceSave=0;
-const KEY='donghyunsim.save';
-function save(){ if(!city) return false; try{ localStorage.setItem(KEY,JSON.stringify(Object.assign(city.snapshot(),{savedAt:Date.now()}))); sinceSave=0; return true; }catch(e){ return false; } }
-function loadSaved(){ try{ const s=JSON.parse(localStorage.getItem(KEY)||'null'); return s&&s.v===1&&s.grid?s:null; }catch(e){ return null; } }
-function clearSaved(){ try{ localStorage.removeItem(KEY); }catch(e){} }
-/* 손으로 저장·불러오기·파일 */
-function fileRow(){ const has=!!loadSaved(), playing=!!city&&!ready; $('#city-save').disabled=!playing; $('#city-export').disabled=!playing; $('#city-load').disabled=!has;
-  $('#city-load').textContent=has?'저장한 도시 불러오기':'저장한 도시 없음'; }
-function saveNow(){ if(!city||ready) return false; const ok=save(); fileRow(); if(ok){ status(`저장했다 · ${city.title} · ${city.dateText()}`); SND.play('coin'); } else status('저장하지 못했다 · 브라우저 저장 공간을 확인한다','error'); return ok; }
-function loadNow(){ const s=loadSaved(); if(!s) return false;
-  if(city&&!ready&&sinceSave>0&&!confirm('지금 도시를 두고 저장한 도시를 불러온다. 저장하지 않은 달은 사라진다.')) return false;
-  return resumeSaved(); }
-function exportCity(){ if(!city||ready) return false; const snap=Object.assign(city.snapshot(),{savedAt:Date.now(),app:'donghyunsim'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(snap)],{type:'application/json'})); a.download=`donghyunsim-${city.title}-${Math.floor(city.month/12)+1}년차.dhcity`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  status(`.dhcity 파일로 내려받았다 · ${city.title} · ${city.dateText()}`); SND.play('coin'); return true; }
-async function importCity(file){ if(!file) return false; let s; try{ s=JSON.parse(await file.text()); }catch(e){ status('도시 파일이 아니다 · 동현심이 내려받은 .dhcity 파일을 고른다','error'); SND.play('buzz'); return false; }
-  if(!s||s.v!==1||!s.grid||!Array.isArray(s.zones)){ status('도시 파일이 아니다 · 동현심이 내려받은 .dhcity 파일을 고른다','error'); SND.play('buzz'); return false; }
-  let c; try{ c=City.restore(s); }catch(e){ status('도시 파일을 읽지 못했다 · '+e.message,'error'); SND.play('buzz'); return false; }
-  if(city&&!ready&&sinceSave>0&&!confirm('지금 도시를 두고 파일의 도시를 불러온다. 저장하지 않은 달은 사라진다.')) return false;
-  try{ localStorage.setItem(KEY,JSON.stringify(Object.assign(c.snapshot(),{savedAt:Date.now()}))); }catch(e){}
-  const ok=resumeSaved(); if(ok){ status(`파일에서 불러왔다 · ${city.title} · ${city.dateText()}`); SND.play('good'); } return ok; }
-$('#city-save').onclick=()=>saveNow(); $('#city-load').onclick=()=>loadNow(); $('#city-export').onclick=()=>exportCity();
-for(const id of ['#city-open','#city-open-ready']) $(id).onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; await importCity(f); };
+let acc=0, now=0;
+/* ---------- 저장·불러오기: 동현전·동현워·동현몬과 같은 브라우저 칸 3개 + .dhsave 파일. 마우스·터치용 메뉴 ---------- */
+const SAVE_FORMAT='donghyunsim-save', SAVE_VERSION=1, SLOT_KEY=n=>'donghyunsim:slot'+n, SLOTS=3;
+let menu=null;
+function snapshot(){ return {format:SAVE_FORMAT,version:SAVE_VERSION,savedAt:new Date().toISOString(),summary:{title:city.title,pop:city.pop,year:Math.floor(city.month/12)+1,funds:city.funds,date:city.dateText()},state:city.snapshot()}; }
+function restore(data){
+  if(!data||data.format!==SAVE_FORMAT) throw new Error('동현심 저장 파일이 아니다.');
+  if(data.version!==SAVE_VERSION) throw new Error('지원하지 않는 저장 형식 버전이다('+data.version+').');
+  const st=data.state; if(!st||st.v!==1||!st.grid||!Array.isArray(st.zones)) throw new Error('도시 정보가 맞지 않는다.');
+  const c=City.restore(st);
+  closeMenu(); city=c; settings={fundsOpt:city.fundsOpt,events:city.events,disasters:city.disasters}; setCard(settings);
+  ready=false; acc=0; paused=false; pauseWhy=''; ghost=null; hideInfo(); $('#ready').hidden=true; newsEl.innerHTML=''; for(const m of (city.log||[]).slice(-4)) addNews(m,true);
+  fitAll(); setSpeed(1,true); renderHud(); layout(); draw(); fileRow(); status(`${city.title} · 인구 ${city.pop.toLocaleString()} · ${city.dateText()}부터 이어 한다`);
+  result(`저장한 도시를 이어 한다 · ${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)} (저장될 때의 설정)`); SND.play('good');
+}
+function readSlot(n){ try{ const t=localStorage.getItem(SLOT_KEY(n)); const d=t?JSON.parse(t):null; return d&&d.format===SAVE_FORMAT?d:null; }catch(e){ return null; } }
+function slotNote(d){ if(!d) return '비어 있음'; const t=new Date(d.savedAt); const pad=v=>String(v).padStart(2,'0'); return `${d.summary.title} · ${d.summary.date} · ${t.getMonth()+1}/${t.getDate()} ${pad(t.getHours())}:${pad(t.getMinutes())}`; }
+function slotSmall(d){ return `인구 ${Number(d.summary.pop).toLocaleString('ko-KR')} · ${Number(d.summary.funds).toLocaleString('ko-KR')}냥`; }
+function toast(t,kind){ status(t,kind); addNews(t,true); }
+function saveToSlot(n){ if(!city||ready) return false; try{ localStorage.setItem(SLOT_KEY(n),JSON.stringify(snapshot())); toast(`브라우저 칸 ${n}에 저장했다 · ${city.dateText()}`); SND.play('coin'); renderSlotList(); return true; } catch(e){ toast('브라우저 저장에 실패했다. 파일로 내려받아 저장하자.','error'); SND.play('buzz'); return false; } }
+function deleteSlot(n){ try{ localStorage.removeItem(SLOT_KEY(n)); }catch(e){} renderSlotList(); }
+function saveToFile(){ if(!city||ready) return false; const d=snapshot(), a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'})); a.download=`donghyunsim-${city.title}-${d.summary.year}년차.dhsave`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast(`.dhsave 파일로 내려받았다 · ${city.title} · ${city.dateText()}`); SND.play('coin'); return true; }
+function loadFrom(d){ try{ restore(d); return true; }catch(e){ const msg='불러오기 실패: '+e.message; if(city&&!ready) toast(msg,'error'); else { result(msg,'error'); status('불러오기 실패','error'); } SND.play('buzz'); return false; } }
+async function loadFile(input){ const f=input.files[0]; input.value=''; if(!f) return false; let d=null; try{ d=JSON.parse(await f.text()); }catch(e){} return loadFrom(d); }
+/* 메뉴: 판 가운데 떠서 누르는 것으로만 고른다. 열려 있는 동안 달은 멎는다 */
+function openMenu(title,items,onCancel){ menu={title,items:items.map(it=>Array.isArray(it)?{label:it[0],fn:it[1]}:it),onCancel}; drawMenu(); }
+function drawMenu(){ const m=$('#menu'); if(!menu){ m.hidden=true; return; } m.hidden=false; m.innerHTML=(menu.title?`<h4>${esc(menu.title)}</h4>`:'')+menu.items.map((it,i)=>`<div class="mi ${it.off?'off':''}" role="menuitem" data-i="${i}"><span>${esc(it.label)}</span>${it.note?`<small>${esc(it.note)}</small>`:''}</div>`).join(''); m.querySelectorAll('.mi').forEach(el=>el.onclick=()=>{ const it=menu.items[+el.dataset.i]; if(!it||it.off) return; closeMenu(); it.fn(); }); draw(); }
+function closeMenu(){ menu=null; $('#menu').hidden=true; acc=0; draw(); }
+function cancelMenu(){ const c=menu&&menu.onCancel; closeMenu(); if(c) c(); }
+function confirmMenu(q,opts,back){ openMenu(q,opts.map(([label,fn])=>({label,fn})),back); }
+function saveMenu(){ if(!city||ready) return; const items=[];
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); items.push({label:`브라우저 칸 ${n}`,note:slotNote(d),fn:()=>{ if(d) confirmMenu(`칸 ${n}에 덮어쓸까?`,[['덮어쓴다',()=>saveToSlot(n)],['그만둔다',saveMenu]],saveMenu); else saveToSlot(n); }}); }
+  items.push({label:'파일로 내려받기',note:'.dhsave',fn:saveToFile},{label:'칸 지우기',fn:deleteMenu},['돌아가기',()=>{}]);
+  openMenu('저장',items); }
+function deleteMenu(){ const items=[];
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); items.push({label:`브라우저 칸 ${n}`,note:slotNote(d),off:!d,fn:()=>confirmMenu(`칸 ${n}${n===2?'를':'을'} 지울까? 되돌릴 수 없다.`,[['지운다',()=>{ deleteSlot(n); toast(`브라우저 칸 ${n}${n===2?'를':'을'} 지웠다.`); deleteMenu(); }],['그만둔다',deleteMenu]],deleteMenu)}); }
+  items.push(['돌아가기',saveMenu]); openMenu('칸 지우기',items,saveMenu); }
+function loadMenu(){ if(!city||ready) return; const items=[];
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); items.push({label:`브라우저 칸 ${n}`,note:slotNote(d),off:!d,fn:()=>confirmMenu('지금 도시를 두고 불러올까? 저장하지 않은 달은 사라진다.',[['불러온다',()=>loadFrom(readSlot(n))],['그만둔다',loadMenu]],loadMenu)}); }
+  items.push({label:'파일에서 불러오기',note:'.dhsave',fn:()=>$('#load-file').click()},['돌아가기',()=>{}]);
+  openMenu('불러오기',items); }
+function fileRow(){ const playing=!!city&&!ready; $('#city-save').disabled=!playing; $('#city-load').disabled=!playing; $('#load-box').hidden=playing; if(!playing) renderSlotList(); }
+function renderSlotList(){
+  const box=$('#slot-list'); if(!box) return; box.innerHTML='';
+  for(let n=1;n<=SLOTS;n++){ const d=readSlot(n); const b=document.createElement('button'); b.className='slot-btn'; b.type='button'; b.disabled=!d;
+    b.innerHTML=`<b>칸 ${n}</b><span>${esc(slotNote(d))}</span>${d?`<small>${esc(slotSmall(d))}</small>`:''}`;
+    b.onclick=()=>loadFrom(readSlot(n));
+    const row=document.createElement('div'); row.className='slot-row'; row.append(b);
+    if(d){ const x=document.createElement('button'); x.className='slot-del'; x.type='button'; x.textContent='지우기'; x.setAttribute('aria-label',`칸 ${n} 지우기`);
+      let t=0; x.onclick=()=>{ if(!x.classList.contains('armed')){ x.classList.add('armed'); x.textContent='정말 지운다'; t=setTimeout(()=>{ x.classList.remove('armed'); x.textContent='지우기'; },4000); return; }
+        clearTimeout(t); deleteSlot(n); status(`브라우저 칸 ${n}${n===2?'를':'을'} 지웠다.`); };
+      row.append(x); }
+    box.append(row); }
+}
+$('#city-save').onclick=()=>saveMenu(); $('#city-load').onclick=()=>loadMenu();
+$('#load-file').onchange=e=>loadFile(e.target); $('#load-file-setup').onchange=e=>loadFile(e.target);
+$('#menu-back').addEventListener('click',e=>{ if(e.target===e.currentTarget) cancelMenu(); });
 
 /* ---------- 판·카메라 ---------- */
 const board=$('#board'), g=board.getContext('2d'), stage=$('#stage'), mainEl=$('.sim-main');
@@ -2684,7 +2745,7 @@ function draw(){
   if(ghost){ const n=ghost.big?3:1, px=px0(ghost.x), py=py0(ghost.y); g.lineWidth=Math.max(2,ts/5); g.strokeStyle=ghost.ok?'rgba(63,174,82,.95)':'rgba(214,64,58,.95)'; g.fillStyle=ghost.ok?'rgba(63,174,82,.22)':'rgba(214,64,58,.22)';
     g.fillRect(px,py,ts*n,ts*n); g.strokeRect(px+1,py+1,ts*n-2,ts*n-2); }
   g.restore();
-  if(paused&&!ready){ g.fillStyle='rgba(20,18,14,.55)'; g.fillRect(0,0,cssW,cssH); g.fillStyle='#fff'; g.font=`700 ${Math.round(Math.min(cssW,cssH)/16)}px ${getComputedStyle(document.body).getPropertyValue('--display')||'sans-serif'}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(speed===0?'멈춤':'잠시 멎음',cssW/2,cssH/2-14); g.font=`500 13px ${getComputedStyle(document.body).getPropertyValue('--body')||'sans-serif'}`; g.fillText(pauseWhy||'▶ 단추를 누르면 달이 흐른다',cssW/2,cssH/2+18); }
+  if((paused||menu)&&!ready){ g.fillStyle='rgba(20,18,14,.55)'; g.fillRect(0,0,cssW,cssH); if(menu) return; g.fillStyle='#fff'; g.font=`700 ${Math.round(Math.min(cssW,cssH)/16)}px ${getComputedStyle(document.body).getPropertyValue('--display')||'sans-serif'}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(speed===0?'멈춤':'잠시 멎음',cssW/2,cssH/2-14); g.font=`500 13px ${getComputedStyle(document.body).getPropertyValue('--body')||'sans-serif'}`; g.fillText(pauseWhy||'▶ 단추를 누르면 달이 흐른다',cssW/2,cssH/2+18); }
 }
 function drawOverlay(x0,y0,x1,y1,ts,px0,py0){ const m=city.maps;
   for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++){ const c=city.grid[y][x], i=y*W+x, px=px0(x), py=py0(y); let col=null;
@@ -2710,40 +2771,30 @@ function addNews(m,quiet){ const li=document.createElement('li'); li.className='
   if(quiet) return; if(m.kind==='bad') SND.play(/라이언|넘쳤/.test(m.text)?'rumble':'alarm'); else if(m.kind==='good') SND.play(/기부/.test(m.text)?'coin':'good'); else if(/결산/.test(m.text)) SND.play('coin'); else if(m.kind==='warn') SND.play('buzz'); }
 function handleMsgs(quiet){ for(const m of city.takeMsgs()) addNews(m,quiet); }
 
-/* ---------- 새 도시·이어 하기 ---------- */
+/* ---------- 새 도시 ---------- */
 function newCity(opts){
-  city=new City({fundsOpt:settings.fundsOpt,events:settings.events,disasters:settings.disasters}); ready=!!(opts&&opts.ready); acc=0; sinceSave=0; paused=false; pauseWhy=''; ghost=null; hideInfo();
+  city=new City({fundsOpt:settings.fundsOpt,events:settings.events,disasters:settings.disasters}); ready=!!(opts&&opts.ready); acc=0; paused=false; pauseWhy=''; ghost=null; hideInfo();
   newsEl.innerHTML=''; handleMsgs(true); fitAll(); setSpeed(1,true);
   $('#ready').hidden=!ready;
-  if(ready){ const s=loadSaved(); $('#ready-note').textContent=`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}`;
-    $('#resume').hidden=!s; $('#resume').textContent=s?`이어 하기 · ${s.title} ${(s.pop||popOf(s)).toLocaleString()}명 · ${Math.floor(s.month/12)+1}년차`:''; 
-    $('#ready-hint').textContent=s?'새 도시를 시작하면 저장된 도시는 지워진다':'시작하면 달이 흐른다 · 저장은 이 브라우저에 남고 파일로도 내려받을 수 있다'; }
+  if(ready){ $('#ready-note').textContent=`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}`; }
   renderHud(); layout(); draw(); fileRow();
   status(ready?`새 도시 시작을 누르면 ${FUNDS_LABEL[settings.fundsOpt]}으로 시작한다`:toolHint(tool));
 }
-function popOf(s){ let R=0; for(const z of s.zones||[]) if(z&&z.kind==='R') R+=z.lv; return R*Sim.POP_PER_LV; }
-function begin(){ if(!ready||!city) return; ready=false; $('#ready').hidden=true; clearSaved(); acc=0; status(toolHint(tool)); SND.play('build'); fileRow(); }
-function resumeSaved(){ const s=loadSaved(); if(!s) return false;
-  try{ city=City.restore(s); }catch(e){ clearSaved(); return false; }
-  settings={fundsOpt:city.fundsOpt,events:city.events,disasters:city.disasters}; setCard(settings);
-  ready=false; acc=0; sinceSave=0; paused=false; pauseWhy=''; ghost=null; $('#ready').hidden=true; newsEl.innerHTML=''; for(const m of (city.log||[]).slice(-4)) addNews(m,true);
-  fitAll(); setSpeed(1,true); renderHud(); layout(); draw(); fileRow(); status(`${city.title} · 인구 ${city.pop.toLocaleString()} · ${city.dateText()}부터 이어 한다`);
-  result(`저장된 도시를 이어 한다 · ${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)} (저장될 때의 설정)`); return true; }
-$('#begin').onclick=()=>begin(); $('#resume').onclick=()=>resumeSaved();
+function begin(){ if(!ready||!city) return; ready=false; $('#ready').hidden=true; acc=0; status(toolHint(tool)); SND.play('build'); fileRow(); }
+$('#begin').onclick=()=>begin();
 
 /* ---------- 속도·멎음 ---------- */
-function setSpeed(n,quiet){ speed=n; document.querySelectorAll('.sim-speed button').forEach(b=>b.classList.toggle('on',+b.dataset.speed===n)); if(!quiet){ SND.play('tick'); if(city&&!ready) status(n===0?'멈춤 · ▶를 누르면 달이 흐른다':n===1?'보통 · 한 달에 1초':n===2?'빠름 · 한 달에 0.5초':'아주 빠름 · 한 달에 0.22초'); } if(n===0&&city&&!ready) save(); }
+function setSpeed(n,quiet){ speed=n; document.querySelectorAll('.sim-speed button').forEach(b=>b.classList.toggle('on',+b.dataset.speed===n)); if(!quiet){ SND.play('tick'); if(city&&!ready) status(n===0?'멈춤 · ▶를 누르면 달이 흐른다':n===1?'보통 · 한 달에 1초':n===2?'빠름 · 한 달에 0.5초':'아주 빠름 · 한 달에 0.22초'); }}
 document.querySelectorAll('.sim-speed button').forEach(b=>b.addEventListener('click',()=>setSpeed(+b.dataset.speed)));
-function pause(why){ if(!paused){ paused=true; pauseWhy=why; if(city&&!ready) save(); } }
+function pause(why){ if(!paused){ paused=true; pauseWhy=why; } }
 function unpause(){ if(paused){ paused=false; pauseWhy=''; acc=0; } }
 document.addEventListener('visibilitychange',()=>{ if(document.hidden) pause('다른 탭을 보는 동안 달이 멎었다'); else unpause(); });
-addEventListener('pagehide',()=>{ if(city&&!ready) save(); });
 
 /* ---------- 달 흐름 ---------- */
-function step(){ city.tick(); handleMsgs(); renderHud(); if(++sinceSave>=6){ save(); fileRow(); } }
+function step(){ city.tick(); handleMsgs(); renderHud(); }
 let last=0;
 function loop(ts){ requestAnimationFrame(loop); now=ts; const dt=last?Math.min(100,ts-last):0; last=ts;
-  if(city&&!ready&&!paused&&speed>0){ acc+=dt; let n=0; while(acc>=SPEED_MS[speed]&&n<3){ acc-=SPEED_MS[speed]; step(); n++; } }
+  if(city&&!ready&&!paused&&!menu&&speed>0){ acc+=dt; let n=0; while(acc>=SPEED_MS[speed]&&n<3){ acc-=SPEED_MS[speed]; step(); n++; } }
   draw(); }
 requestAnimationFrame(loop);
 
@@ -2767,7 +2818,7 @@ let infoTimer=0;
 function showInfo(c){ if(!city) return; const t=city.describe(c.x,c.y); if(!t) return; const el=$('#info'); el.innerHTML=`<b>(${c.x}, ${c.y})</b> ${t}`; el.hidden=false; clearTimeout(infoTimer); infoTimer=setTimeout(hideInfo,5000); }
 function hideInfo(){ const el=$('#info'); if(el) el.hidden=true; }
 board.addEventListener('contextmenu',e=>e.preventDefault());
-board.addEventListener('pointerdown',e=>{ if(!city||ready) return; e.preventDefault(); board.setPointerCapture(e.pointerId); const c=cellOf(e); pointers.set(e.pointerId,{px:c.px,py:c.py});
+board.addEventListener('pointerdown',e=>{ if(!city||ready||menu) return; e.preventDefault(); board.setPointerCapture(e.pointerId); const c=cellOf(e); pointers.set(e.pointerId,{px:c.px,py:c.py});
   if(pointers.size===2){ // 두 손가락: 어떤 도구든 옮기기·늘리기
     const [a,b]=[...pointers.values()]; pinch={d:Math.hypot(a.px-b.px,a.py-b.py),mx:(a.px+b.px)/2,my:(a.py+b.py)/2,zoom:cam.zoom,cx:cam.x,cy:cam.y}; mode='pinch'; ghost=null; pendingPaint=false; return; }
   if(pointers.size>2) return;
@@ -2795,7 +2846,7 @@ function endPointer(e,cancel){ if(!pointers.has(e.pointerId)) return; const c=ce
   board.classList.remove('panning'); mode=null; lastCell=null; if(e.pointerType!=='mouse') ghost=null; else updateGhost(c); }
 board.addEventListener('pointerup',e=>endPointer(e,false)); board.addEventListener('pointercancel',e=>endPointer(e,true));
 board.addEventListener('pointerleave',e=>{ if(!pointers.has(e.pointerId)) ghost=null; });
-board.addEventListener('wheel',e=>{ if(!city) return; e.preventDefault(); const c=cellOf(e); setZoom(cam.zoom*Math.pow(1.0015,-e.deltaY),c.px,c.py); },{passive:false});
+board.addEventListener('wheel',e=>{ if(!city||menu) return; e.preventDefault(); const c=cellOf(e); setZoom(cam.zoom*Math.pow(1.0015,-e.deltaY),c.px,c.py); },{passive:false});
 $('#zoom-in').onclick=()=>{ setZoom(cam.zoom*1.5); SND.play('tick'); }; $('#zoom-out').onclick=()=>{ setZoom(cam.zoom/1.5); SND.play('tick'); }; $('#zoom-fit').onclick=()=>{ fitAll(); SND.play('tick'); };
 $('#ready').addEventListener('click',e=>{ if(e.target===e.currentTarget) begin(); });
 
@@ -2823,11 +2874,11 @@ function start(opts){
   settings={fundsOpt:p.fundsOpt,events:p.events,disasters:p.disasters}; setCard(settings);
   const rdy=!!(opts&&opts.ready);
   result((p.note?p.note+' ':'')+(rdy?`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}. 판의 단추를 누르면 시작한다.`:`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}으로 새 도시를 시작했다. 발전소를 세우고 길을 깔아 보자.`));
-  newCity({ready:rdy}); if(!rdy) clearSaved(); return true;
+  newCity({ready:rdy}); return true;
 }
 setTool('road'); start({ready:true});
 window.__donghyunsim={get city(){return city;},get ready(){return ready;},get settings(){return settings;},get tool(){return tool;},setTool,get cam(){return cam;},setZoom,fitAll,get speed(){return speed;},setSpeed,get paused(){return paused;},
-  begin,start,newCity,resumeSaved,save,loadSaved,clearSaved,saveNow,loadNow,exportCity,importCity,parseSet,applyAt,step:(n=1)=>{ for(let i=0;i<n&&city&&!ready;i++) step(); draw(); },get view(){return view;},isFull,get ghost(){return ghost;},cellOf,draw};
+  begin,start,newCity,snapshot,restore,readSlot,saveToSlot,deleteSlot,saveToFile,loadFrom,saveMenu,loadMenu,closeMenu,get menu(){return menu;},parseSet,applyAt,step:(n=1)=>{ for(let i=0;i<n&&city&&!ready;i++) step(); draw(); },get view(){return view;},isFull,get ghost(){return ghost;},cellOf,draw};
 })();
 </script>
 <script>
