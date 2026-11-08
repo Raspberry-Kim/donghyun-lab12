@@ -11,8 +11,8 @@ const COST={road:10,bridge:50,wire:5,wirebridge:25,R:100,C:100,I:100,park:30,pow
 const UPKEEP={power:40,police:30,fire:30,road:0.1,wire:0.05,park:0.5};
 const PLANT_ZONES=40;            // 발전소 하나가 먹이는 구역 수
 const MAX_LV=5;
-const FUNDS_OPTS=[50000,20000,10000];
-const FUNDS_LABEL=['넉넉하게 50,000냥','보통 20,000냥','빠듯하게 10,000냥'];
+const FUNDS_OPTS=[50000,20000,10000,100000];
+const FUNDS_LABEL=['넉넉하게 50,000냥','보통 20,000냥','빠듯하게 10,000냥','아주 넉넉하게 100,000냥'];
 const TITLES=[[60000,'수도'],[30000,'대도시'],[10000,'도시'],[2000,'읍'],[500,'마을'],[0,'촌락']];
 const POP_PER_LV=160, JOBS_C=80, JOBS_I=120;
 
@@ -53,7 +53,7 @@ function nearWater(grid,x,y){ for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++
 class City{
   constructor(opts){
     opts=opts||{};
-    this.fundsOpt=clamp(opts.fundsOpt==null?1:opts.fundsOpt,0,2);
+    this.fundsOpt=clamp(opts.fundsOpt==null?1:opts.fundsOpt,0,FUNDS_OPTS.length-1);
     this.funds=FUNDS_OPTS[this.fundsOpt];
     this.events=opts.events==null?true:!!opts.events;
     this.disasters=opts.disasters==null?true:!!opts.disasters;
@@ -316,7 +316,7 @@ function parseSet(out){
   if(!tok.length) return {fundsOpt:1,events:true,disasters:true,note:'출력이 없어 기본값(보통 20,000냥 · 이벤트 켬 · 재해 켬)으로 시작한다.'};
   if(tok.length!==3) return {err:`정수를 ${tok.length}개 출력했다. 자금 옵션, 이벤트, 재해 — 세 개를 차례로 출력하자.`};
   const [f,e,d]=tok;
-  if(!Number.isInteger(f)||f<0||f>2) return {err:`자금 옵션 ${f}은 쓸 수 없다. 0(넉넉) · 1(보통) · 2(빠듯) 중 하나다.`};
+  if(!Number.isInteger(f)||f<0||f>3) return {err:`자금 옵션 ${f}은 쓸 수 없다. 0(넉넉) · 1(보통) · 2(빠듯) · 3(아주 넉넉 100,000냥) 중 하나다.`};
   if(!Number.isInteger(e)||(e!==0&&e!==1)) return {err:`이벤트 ${e}은 쓸 수 없다. 0(끔) 또는 1(켬)이다.`};
   if(!Number.isInteger(d)||(d!==0&&d!==1)) return {err:`재해 ${d}은 쓸 수 없다. 0(끔) 또는 1(켬)이다.`};
   return {fundsOpt:f,events:e===1,disasters:d===1};

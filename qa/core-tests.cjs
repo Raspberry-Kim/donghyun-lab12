@@ -17,8 +17,8 @@ ok('지도: 40×40, 강이 위에서 아래로 이어지고 폭 3~4, 숲이 있�
     assert.ok(xs.length>=3&&xs.length<=4,`줄 ${y} 강 폭 ${xs.length}`); assert.ok(xs[xs.length-1]-xs[0]===xs.length-1,'강이 끊김'); }
   assert.ok(trees>60,'숲 '+trees); assert.deepStrictEqual(g.map(r=>r.map(c=>c.t)),g2.map(r=>r.map(c=>c.t)));
 });
-ok('자금 옵션: 0 넉넉 50,000 · 1 보통 20,000 · 2 빠듯 10,000, 기본 1 1 1',()=>{
-  assert.deepStrictEqual(FUNDS_OPTS,[50000,20000,10000]);
+ok('자금 옵션: 0 넉넉 50,000 · 1 보통 20,000 · 2 빠듯 10,000 · 3 아주 넉넉 100,000, 기본 1 1 1',()=>{
+  assert.deepStrictEqual(FUNDS_OPTS,[50000,20000,10000,100000]); assert.strictEqual(new City({fundsOpt:3}).funds,100000);
   assert.strictEqual(new City({fundsOpt:0}).funds,50000); assert.strictEqual(new City({}).funds,20000); assert.strictEqual(new City({fundsOpt:2}).funds,10000);
   const c=new City({}); assert.ok(c.events&&c.disasters); assert.strictEqual(c.title,'촌락'); assert.strictEqual(c.log.length,1);
 });
@@ -125,10 +125,10 @@ ok('저장과 복원: 스냅샷을 되살리면 자금·달·구역·건물·전
 ok('규약: 정수 셋 → 자금 옵션·이벤트·재해. 빈 출력은 1 1 1. 개수·범위 오류를 가려낸다',()=>{
   assert.deepStrictEqual(parseSet('1\n1\n1\n'),{fundsOpt:1,events:true,disasters:true}); assert.deepStrictEqual(parseSet('0\n0\n0'),{fundsOpt:0,events:false,disasters:false}); assert.deepStrictEqual(parseSet('2 1 0'),{fundsOpt:2,events:true,disasters:false});
   const e=parseSet(''); assert.strictEqual(e.fundsOpt,1); assert.ok(e.note);
-  assert.match(parseSet('1 1').err,/2개/); assert.match(parseSet('1 1 1 1').err,/4개/); assert.match(parseSet('3 1 1').err,/자금 옵션 3/); assert.match(parseSet('1 2 1').err,/이벤트 2/); assert.match(parseSet('1 1 -1').err,/재해 -1/); assert.match(parseSet('1 1 가').err,/재해/);
+  assert.match(parseSet('1 1').err,/2개/); assert.match(parseSet('1 1 1 1').err,/4개/); assert.deepStrictEqual(parseSet('3 0 0'),{fundsOpt:3,events:false,disasters:false}); assert.match(parseSet('4 1 1').err,/자금 옵션 4/); assert.match(parseSet('-1 1 1').err,/자금 옵션 -1/); assert.match(parseSet('1 2 1').err,/이벤트 2/); assert.match(parseSet('1 1 -1').err,/재해 -1/); assert.match(parseSet('1 1 가').err,/재해/);
 });
-ok('예제 넷: 동현랭으로 돌리면 (1,1,1) (0,1,1) (1,0,1) (1,1,0)',()=>{
-  const want={basic:[1,true,true],rich:[0,true,true],noevent:[1,false,true],nodisaster:[1,true,false]}; assert.strictEqual(examples.length,4);
+ok('예제 여섯: 동현랭으로 돌리면 (1,1,1) (0,1,1) (1,0,1) (1,1,0) (3,1,1) (3,0,0)',()=>{
+  const want={basic:[1,true,true],rich:[0,true,true],noevent:[1,false,true],nodisaster:[1,true,false],rich100:[3,true,true],sandbox:[3,false,false]}; assert.strictEqual(examples.length,6);
   for(const ex of examples){ const out=D.run(ex.code,{maxSteps:300000}).output; const p=parseSet(out); assert.ok(!p.err,ex.id+' '+p.err); assert.deepStrictEqual([p.fundsOpt,p.events,p.disasters],want[ex.id],ex.id); assert.ok(!p.note,ex.id+' 출력 없음'); }
 });
 console.log(`\n${n} tests passed`);

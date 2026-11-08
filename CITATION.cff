@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata below."
 title: "Donghyunsim (동현심): a small city-building laboratory in the manner of SimCity DS, with the starting funds and the event/disaster switches set through the esoteric language Donghyun-lang"
 type: software
-version: "0.01"
+version: "0.02"
 doi: "10.5281/zenodo.24050245"
 date-released: "2026-11-08"
 authors:
@@ -25,7 +25,7 @@ abstract: >-
   and upkeep is paid every month, and the city title changes with
   population. Optional events (festival, donation, tourists, tree planting)
   and disasters (fire, flood, a giant monster) occur at random. The only
-  settings, the starting funds option (0-2) and the event and disaster
+  settings, the starting funds option (0-3) and the event and disaster
   switches (0/1), are chosen through a program written in the esoteric
   programming language Donghyun-lang. Input is mouse and touch only, with
   fullscreen; keyboard and gamepad are intentionally unsupported. The city

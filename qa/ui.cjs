@@ -20,10 +20,11 @@ const H='window.__donghyunsim';
   ok('첫 화면: 시작 카드 · 달 멎음 · 도구 12');
   // 1) 규약 오류: 정수 둘 → 시작하지 않는다
   await p.fill('#code','나는 동현이냐?\n뿡뿡 도옹~뿡뿡뿡~뿡뿡 도옹~뿡뿡뿡\n동현이구나'); await p.click('#run'); assert.match(await p.$eval('#result',e=>e.textContent),/규약 오류.*2개/); assert.strictEqual(await G('S.ready'),true);
-  await p.fill('#code','나는 동현이냐?\n뿡뿡 도오오옹~뿡뿡뿡~뿡뿡 도옹~뿡뿡뿡~뿡뿡 도옹~뿡뿡뿡\n동현이구나'); await p.click('#run'); assert.match(await p.$eval('#result',e=>e.textContent),/자금 옵션 3/); ok('규약 오류: 개수·범위');
+  await p.fill('#code','나는 동현이냐?\n뿡뿡 도오오오옹~뿡뿡뿡~뿡뿡 도옹~뿡뿡뿡~뿡뿡 도옹~뿡뿡뿡\n동현이구나'); await p.click('#run'); assert.match(await p.$eval('#result',e=>e.textContent),/자금 옵션 4/); assert.strictEqual(await G('S.ready'),true); ok('규약 오류: 개수·범위');
   // 2) 예제 02 로 시작 → 50,000냥, 바로 달이 흐른다
   await p.selectOption('#example','rich'); await p.click('#run'); assert.strictEqual(await G('S.ready'),false); assert.strictEqual(await G('c.funds'),50000); assert.strictEqual(await p.$eval('#funds',e=>e.textContent),'50,000');
   await p.waitForTimeout(1300); assert.ok((await G('c.month'))>=1,'달이 흐른다'); await p.click('.sim-speed button[data-speed="0"]'); const m0=await G('c.month'); await p.waitForTimeout(1200); assert.strictEqual(await G('c.month'),m0,'멈춤'); ok('예제 02: 50,000냥 · 달 흐름 · 멈춤 단추');
+  await p.selectOption('#example','sandbox'); await p.click('#run'); assert.strictEqual(await G('c.funds'),100000); assert.deepStrictEqual(await G('[c.events,c.disasters]'),[false,false]); assert.strictEqual(await p.$eval('#set-card',e=>e.textContent.includes('아주 넉넉하게 100,000냥')),true); await p.selectOption('#example','rich'); await p.click('#run'); assert.strictEqual(await G('c.funds'),50000); await p.click('.sim-speed button[data-speed="0"]'); ok('예제 06: 100,000냥 · 이벤트·재해 끔');
   await p.evaluate(()=>document.querySelector('#stage').scrollIntoView({block:'center'}));
   // 3) 도구 단추 → 도구 바뀜. 발전소 3×3: 누른 채 옮기다 떼면 놓인다(유령 초록)
   await p.click('#tools button[data-tool="power"]'); assert.strictEqual(await G('S.tool'),'power'); assert.ok(await p.$eval('#tools button[data-tool="power"]',e=>e.classList.contains('on')));
