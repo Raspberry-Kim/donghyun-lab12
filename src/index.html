@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="강이 흐르는 40×40 평지에 길·전선·주거·상업·공업 구역을 놓아 도시를 키우는 작은 도시 놀이. 마우스와 터치만으로 놀고, 자금 옵션·이벤트·재해는 동현랭으로 정한다.">
+  <title>동현심™ · 강가 평지에 작은 도시를 세운다</title>
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="#" aria-label="동현심 첫 화면으로"><span class="brand-main"><img class="brand-icon" src="__BRAND_ICON__" alt="" width="96" height="96">동현<span>심</span><sup>TM</sup></span><i class="brand-divider"></i><span class="brand-sub">CITY BUILDING LAB<small>강가 평지에 작은 도시를 세운다</small></span></a>
+  <div class="edition">v0.01<button id="sound" class="icon-btn" aria-label="효과음 켜기·끄기" title="효과음" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="snd-on" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="snd-off" d="m16 9 6 6m0-6-6 6"/></svg></button><button id="theme" class="icon-btn" aria-label="밝은 화면과 어두운 화면 전환" title="화면 전환" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></div>
+</header>
+<main>
+__SERIES_NAV__
+  <section class="intro">
+    <div><div class="eyebrow">CITY BUILDER × ESOTERIC LANGUAGE</div><h1>작은 도시 실험실: <span class="title-brand">동현<span>심</span><sup>TM</sup></span></h1><p>강이 흐르는 40×40 평지에 <strong>길과 전선</strong>을 깔고 <strong>주거·상업·공업</strong> 구역을 놓으면 사람이 모여 집이 서고 가게와 공장이 올라간다. 발전소·경찰서·소방서·공원으로 도시를 돌보며 촌락에서 수도까지 키운다. <strong>자금 옵션</strong>, <strong>이벤트</strong>, <strong>재해</strong>를 켜고 끄는 것은 <strong>동현랭</strong> 코드가 정한다. 마우스와 손가락만으로 논다.</p></div>
+    <div class="model-stamp"><strong id="stamp-funds">20,000 <span>냥</span></strong><strong id="stamp-flags">이벤트 켬 <span>· 재해 켬</span></strong><small>40×40 평지 · 강 하나 · 구역 셋 · 건물 넷</small><div class="input-marks" role="group" aria-label="입력 표식 · 쓸 수 있는 것: 마우스(터치) · 전체 화면"><span class="mark off kb" tabindex="0" data-tip="키보드 없음 · 이 실험실은 마우스와 손가락으로만 논다. 키보드는 동현랭 코드를 쓸 때만 쓴다." aria-label="키보드 없음"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path class="dots" d="M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M6 13h.01M9.5 13h.01M13 13h.01M16.5 13h.01"/><path d="M8 16h8"/></svg></span><span class="mark on ms" tabindex="0" data-tip="마우스·터치 가능 · 아래 도구를 고르고 판을 누른다. 길·전선·철거는 <b>끌어서</b> 잇고, 구역·건물은 <b>누른 채 옮기다 떼면</b> 놓인다. 두 손가락으로 판을 옮기고 늘린다. 마우스는 바퀴와 가운데 단추로." aria-label="마우스 가능"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="5"/><path d="M12 7v3"/></svg></span><span class="mark off gp" tabindex="0" data-tip="게임패드 없음 · 이 실험실은 게임패드를 읽지 않는다." aria-label="게임패드 없음"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6.5" width="20" height="11" rx="4.5"/><path d="M7 9.6v4.8M4.6 12h4.8"/><circle cx="16.6" cy="9.6" r=".85"/><circle cx="14.4" cy="12" r=".85"/><circle cx="18.8" cy="12" r=".85"/><circle cx="16.6" cy="14.4" r=".85"/><path class="dots" d="M11.3 13.4h.01M12.9 13.4h.01"/></svg></span><span class="mark on fs" tabindex="0" data-tip="전체 화면 가능 · 판 위 오른쪽의 네모 단추. 휴대폰은 가로로 돌려도 좋다. 닫기는 왼쪽 위 ✕." aria-label="전체 화면 가능"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><text class="full" x="12" y="14.6" text-anchor="middle">FULL</text></svg></span></div></div>
+  </section>
+  <nav class="tabs" aria-label="동현심 메뉴"><button class="active" data-tab="play" aria-current="page">놀이</button><button data-tab="protocol">동현심 규약</button><button data-tab="rules">놀이 방법</button><button data-tab="about">원작과 출처</button><span>자금·이벤트·재해는 동현랭으로, 도시는 손으로</span></nav>
+  <div class="getting-started"><p><strong>처음이라면?</strong> 예제를 고르고 <b>시작</b>을 눌러 보자. 발전소를 하나 세우고, 길을 깔고, 길가에 주거 구역을 놓은 뒤 전선으로 발전소와 이어 주면 집이 선다. 시작 자금과 이벤트·재해는 모두 <b>동현랭</b> 명령으로만 정한다.</p><a href="https://raspberry-kim.github.io/donghyun-lang/" target="_blank" rel="noopener">동현랭 배우기 · 실행기 ↗</a></div>
+
+  <section class="tab-panel" id="tab-play">
+    <div class="play-grid">
+      <div class="field-col">
+        <div class="section-title"><h2><span>A</span> 도시 판</h2><span id="status" role="status">판을 준비하는 중</span></div>
+        <div class="sim-wrap" id="stage">
+          <button id="exit-full" class="sim-exit" hidden aria-label="전체 화면 닫기">✕ 전체 화면 닫기</button>
+          <div class="sim-top">
+            <div class="sim-chip money"><span>자금</span><strong id="funds">20,000</strong></div>
+            <div class="sim-chip"><span id="title">촌락</span><strong id="pop">0</strong></div>
+            <div class="sim-chip date"><span>날짜</span><strong id="date">1년 1월</strong></div>
+            <div class="sim-rci" aria-label="수요: 주거·상업·공업"><i data-k="R"><b></b><span>주</span></i><i data-k="C"><b></b><span>상</span></i><i data-k="I"><b></b><span>공</span></i></div>
+            <div class="sim-speed" role="group" aria-label="속도"><button data-speed="0" aria-label="멈춤" title="멈춤"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button><button data-speed="1" aria-label="보통" title="보통" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button><button data-speed="2" aria-label="빠름" title="빠름"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5v14l9-7zM12 5v14l9-7z"/></svg></button><button data-speed="3" aria-label="아주 빠름" title="아주 빠름"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 6v12l7-6zM8.5 6v12l7-6zM16 6v12l7-6z"/></svg></button></div>
+            <button id="full" class="sim-round" aria-label="전체 화면" title="전체 화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+          </div>
+          <div class="sim-main">
+            <canvas class="sim-board" id="board" width="640" height="640" aria-label="도시 판. 도구를 고르고 판을 눌러 길·전선·구역·건물을 놓는다."></canvas>
+            <div class="sim-view" role="group" aria-label="보기"><button data-view="base" class="on">기본</button><button data-view="power">전력</button><button data-view="pol">오염</button><button data-view="crime">범죄</button><button data-view="val">지가</button></div>
+            <div class="sim-zoom"><button id="zoom-in" aria-label="확대">+</button><button id="zoom-out" aria-label="축소">−</button><button id="zoom-fit" aria-label="전체 보기" title="전체 보기">⤢</button></div>
+            <div class="sim-info" id="info" hidden></div>
+          </div>
+          <div class="sim-tools" id="tools" role="toolbar" aria-label="도구"></div>
+          <ul class="sim-news" id="news" aria-live="polite" aria-label="소식"></ul>
+          <div class="sim-over" id="ready" hidden>
+            <div class="sim-card" role="dialog" aria-modal="true" aria-labelledby="ready-title">
+              <h3 id="ready-title">동현심</h3>
+              <p id="ready-note">보통 20,000냥 · 이벤트 켬 · 재해 켬</p>
+              <button id="begin" class="dh-btn dh-run">새 도시 시작</button>
+              <button id="resume" class="dh-btn sim-resume" hidden>이어 하기</button>
+              <label class="dh-btn sim-resume sim-open-label">도시 파일 열기<input id="city-open-ready" type="file" accept=".dhcity,.json,application/json" hidden></label>
+              <p class="sim-ready-hint" id="ready-hint">시작하면 달이 흐른다 · 저장은 이 브라우저에 남고 파일로도 내려받을 수 있다</p>
+            </div>
+          </div>
+        </div>
+        <div class="file-row sim-file" aria-label="도시 저장과 불러오기">
+          <button id="city-save" disabled>도시 저장</button>
+          <button id="city-load" disabled>저장한 도시 불러오기</button>
+          <button id="city-export" disabled>.dhcity 내려받기</button>
+          <label class="file-label">.dhcity 열기<input id="city-open" type="file" accept=".dhcity,.json,application/json" hidden></label>
+          <span class="sim-file-note" id="city-note">저장은 이 브라우저 한 칸에 남고, 6달마다·멈출 때 저절로 저장된다. 파일로 내려받으면 다른 기기에서도 연다.</span>
+        </div>
+      </div>
+      <div class="side-col">
+        <div class="section-title"><h2><span>B</span> 동현랭 설정 코드</h2><span>sim.dh</span></div>
+        <div class="dh-panel">
+          <div class="dh-head"><select id="example" aria-label="동현랭 설정 예제 선택"></select><span class="dh-spacer"></span><button id="run" class="dh-btn dh-run" title="Ctrl/⌘ + Enter"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"></path></svg>시작 <kbd>⌘↵</kbd></button></div>
+          <div class="code-wrap"><div id="lines" aria-hidden="true"></div><textarea id="code" aria-label="동현랭 설정 코드" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea></div>
+          <div class="code-meta dh-status"><span id="line-count"></span><span>정수 셋 출력 → 자금 옵션 · 이벤트 · 재해 · ⌘/Ctrl ↵ 실행</span></div>
+        </div>
+        <p id="example-note"></p>
+        <div class="sortie-card" id="set-card"></div>
+        <p id="result" aria-live="polite">예제를 고른 뒤 시작을 눌러 보자. 자금 옵션과 이벤트·재해는 코드로만 정한다.</p>
+        <div class="file-row"><button id="save">.dh 저장</button><label class="file-label">.dh 열기<input id="open" type="file" accept=".dh,.txt,text/plain" hidden></label></div>
+      </div>
+    </div>
+    <div class="workflow"><span>동현랭 코드</span><b>→</b><span>자금 · 이벤트 · 재해</span><b>→</b><span>시작</span><b>→</b><span>발전소 · 길 · 구역 · 전선</span><b>→</b><span>사람이 모이고 건물이 자란다</span><b>→</b><span>촌락에서 수도까지</span></div>
+  </section>
+
+  <section class="tab-panel document" id="tab-protocol" hidden>
+    <div class="doc-heading"><div class="eyebrow">FUNDS · EVENTS · DISASTERS PROTOCOL</div><h2>동현심 규약</h2></div>
+    <div class="doc-columns">
+      <div>
+        <h3>정하는 것은 세 숫자다</h3>
+        <ul>
+          <li>동현랭 코드가 출력한 <strong>첫 정수</strong>가 자금 옵션, <strong>둘째 정수</strong>가 이벤트, <strong>셋째 정수</strong>가 재해다.</li>
+          <li>자금 옵션은 <code>0</code> 넉넉하게 50,000냥, <code>1</code> 보통 20,000냥, <code>2</code> 빠듯하게 10,000냥이다. 이벤트와 재해는 <code>0</code>이 끔, <code>1</code>이 켬이다.</li>
+          <li>기본값은 <code>1 1 1</code>(보통 · 이벤트 켬 · 재해 켬)이다. 아무것도 출력하지 않으면 이 값으로 시작한다.</li>
+          <li>정수를 셋이 아닌 개수로 출력하거나 범위를 벗어나면 시작하지 않고 오류를 알려 준다.</li>
+          <li>코드는 새 도시를 시작할 때만 읽는다. 이어 하는 도시는 저장될 때의 설정을 그대로 쓴다.</li>
+        </ul>
+        <h3>예제</h3>
+        <p><strong>01 · 기본 모드</strong>는 <code>뿡뿡 도옹~뿡뿡뿡</code>을 세 번 써서 1 1 1을 출력한다. <strong>02 · 자금 옵션</strong>은 첫 정수를 <code>도옹ㅠ</code>(0)으로 바꿔 50,000냥으로 시작하고, <strong>03 · 이벤트 끄기</strong>는 둘째를, <strong>04 · 재해 끄기</strong>는 셋째를 0으로 둔다.</p>
+      </div>
+      <div>
+        <h3>코드가 하지 않는 것</h3>
+        <p>동현랭 코드는 길을 깔거나 구역을 놓지 않는다. 지도는 하나로 정해져 있고(강이 흐르는 평지), 어디에 무엇을 놓을지는 사람이 손으로 한다.</p>
+        <h3>값</h3>
+        <ul>
+          <li>길 한 칸 10냥(강 위 다리 50냥), 전선 한 칸 5냥(강 위 25냥), 구역 3×3 100냥, 공원 한 칸 30냥, 발전소 3,000냥, 경찰서·소방서 500냥, 철거 한 칸 1냥(구역·건물은 9냥).</li>
+          <li>달마다 유지비가 나간다: 발전소 40냥, 경찰서·소방서 30냥, 그 밖에 길·전선·공원도 조금씩. 세금은 사람 수와 가게·공장 크기에 따라 달마다 들어오고, 해마다 1월에 결산을 알려 준다.</li>
+          <li>발전소 하나가 구역·건물 40개에 전기를 준다. 전기는 전선·구역·건물을 따라 이어지고, 전선은 길과 강 위에도 놓을 수 있다.</li>
+          <li>구역은 둘레에 길이 닿고 전기가 들어와야 자란다. 주거는 일자리가 있으면, 상업은 사람이 있으면, 공업은 사람이 많으면 수요가 생긴다. 지가가 높으면 더 높은 건물로 자란다(1~5단계).</li>
+          <li>칭호는 인구로 바뀐다: 촌락 → 마을 500 → 읍 2,000 → 도시 10,000 → 대도시 30,000 → 수도 60,000.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab-panel document" id="tab-rules" hidden>
+    <div class="doc-heading"><div class="eyebrow">HOW TO PLAY</div><h2>놀이 방법</h2></div>
+    <div class="doc-columns">
+      <div>
+        <h3>마우스와 손가락만으로</h3>
+        <ul>
+          <li>머리글 오른쪽의 네 아이콘(키보드·마우스·게임패드·전체 화면 FULL)은 입력 표식이다. 켜진 것만 이 실험실에서 쓸 수 있다: <b>마우스(터치) · 전체 화면</b>. 키보드와 게임패드는 판을 움직이지 않는다.</li>
+          <li>처음 열면 판 위에 <strong>새 도시 시작</strong> 단추가 떠 있고 달은 멎어 있다. 저장된 도시가 있으면 <strong>이어 하기</strong>도 보인다. 오른쪽 동현랭 코드의 시작을 누르면 그 설정으로 새 도시가 바로 시작된다.</li>
+          <li>판 아래 <strong>도구</strong>를 고른 뒤 판을 누른다. 길·전선·공원·철거는 누른 채 끌면 지나간 칸에 이어진다(손가락은 떼거나 움직이기 시작할 때 놓이므로, 두 번째 손가락이 바로 따라오면 아무것도 놓이지 않는다). 구역(주거·상업·공업)과 건물(발전소·경찰서·소방서)은 3×3이라 누르면 초록 테두리가 따라오고, 손을 떼는 자리에 놓인다. 빨간 테두리면 놓을 수 없다.</li>
+          <li><strong>이동</strong> 도구로 판을 끌면 보는 자리가 옮겨진다. 어떤 도구를 쥐고 있어도 <strong>두 손가락</strong>으로 끌면 옮겨지고, 벌리면 커진다. 마우스는 바퀴로 늘리고 줄이며, 가운데 단추나 오른 단추로 끌면 옮겨진다. 판 오른쪽 아래의 +·−·⤢ 단추도 같다.</li>
+          <li><strong>정보</strong> 도구로 칸을 누르면 그 칸이 무엇인지, 전기·길·지가·오염·치안이 어떤지 말해 준다.</li>
+          <li>판 왼쪽 위의 <strong>보기</strong> 단추로 전력·오염·범죄·지가를 색으로 겹쳐 볼 수 있다.</li>
+        </ul>
+        <h3>처음 도시</h3>
+        <p>발전소(3,000냥)를 하나 세운다. 발전소에서 조금 떨어진 곳에 길을 한 줄 깔고, 길가에 주거 구역 두어 개와 상업·공업 구역을 놓는다. 전선을 발전소에서 구역까지 끌어 이으면(구역끼리 붙어 있으면 전기가 서로 전해진다) 몇 달 안에 집이 선다. 번개 표시는 전기가 없다는 뜻, 회색 길 표시는 길이 닿지 않는다는 뜻이다.</p>
+      </div>
+      <div>
+        <h3>도시를 돌보기</h3>
+        <ul>
+          <li>공장은 오염을 내고, 오염이 높은 곳은 지가가 내려 집이 잘 자라지 않는다. 공업 구역은 주거에서 조금 떨어뜨리고 사이에 공원을 두면 좋다. 강과 나무도 지가를 올린다.</li>
+          <li>사람이 늘면 범죄가 는다. <strong>경찰서</strong>는 둘레의 범죄를 누르고, <strong>소방서</strong>는 불이 번지는 것을 막고 빨리 끈다.</li>
+          <li>돈이 모자라면 짓지 못한다. 달마다 세금이 들어오니 조금 기다리거나, 쓸모없는 길과 전선을 철거해 유지비를 줄인다.</li>
+          <li>위의 멈춤·보통·빠름·아주 빠름 단추로 달이 흐르는 빠르기를 바꾼다. 다른 탭을 보거나 창을 벗어나면 저절로 멎고, 도시는 이 브라우저에 저장된다.</li>
+        </ul>
+        <h3>저장과 불러오기</h3>
+        <ul>
+          <li>판 아래 <strong>도시 저장</strong>을 누르면 지금 도시가 이 브라우저의 저장 칸에 남는다. 누르지 않아도 여섯 달마다, 그리고 멎을 때마다 저절로 저장된다. 저장 칸은 하나이고, 새 도시를 시작하면 비워진다.</li>
+          <li><strong>저장한 도시 불러오기</strong>는 저장 칸의 도시를 지금 판에 되살린다. 처음 열었을 때 보이는 <strong>이어 하기</strong>와 같은 일을 한다.</li>
+          <li><strong>.dhcity 내려받기</strong>는 도시를 파일 하나로 내려받는다. 다른 기기나 다른 브라우저에서 <strong>.dhcity 열기</strong>(첫 화면의 <strong>도시 파일 열기</strong>)로 고르면 그 도시가 이어진다. 파일 속 설정(자금·이벤트·재해)도 함께 따라온다.</li>
+        </ul>
+        <h3>이벤트와 재해</h3>
+        <ul>
+          <li><strong>이벤트</strong>(켜 두었다면): 포동이 시장의 축제로 가게가 붐비고, 슈슈가 기부금을 보내고, 관광객이 몰려 세금이 늘고, 초파리 떼가 나무를 심어 준다.</li>
+          <li><strong>재해</strong>(켜 두었다면): 불이 나 번지고, 강이 넘쳐 강가를 적시고, 거대 라이언이 도시를 가로질러 밟고 지나간다. 소방서가 가까우면 불은 빨리 꺼지고, 부서진 자리는 철거하면 다시 쓸 수 있다.</li>
+        </ul>
+        <h3>끝</h3>
+        <p>정해진 끝은 없다. 인구 60,000의 <strong>수도</strong>가 되면 최고 칭호다. 돈이 바닥나도 도시는 멈추지 않지만 아무것도 지을 수 없으니, 그 전에 살림을 맞추자.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab-panel document" id="tab-about" hidden>
+    <div class="doc-heading"><div class="eyebrow">ORIGINAL & CREDITS</div><h2>원작과 출처</h2></div>
+    <div class="doc-columns">
+      <div>
+        <h3>원작</h3>
+        <p>이 놀이는 Nintendo DS판 「SimCity DS」(2007, 개발 AKI Corporation·EA Japan, 발매 Electronic Arts)에서 따온 도시 만들기의 뼈대를 따른다. SimCity DS는 「SimCity 3000」을 바탕으로 터치 펜으로 길·전선·구역을 놓도록 고친 작품이며, 주거·상업·공업 구역, 전력과 길의 연결, 수요에 따라 자라는 건물, 재해, 자문관의 알림이 원작의 뼈대다(<a href="https://en.wikipedia.org/wiki/SimCity_DS" target="_blank" rel="noopener">Wikipedia: SimCity DS</a>, <a href="https://en.wikipedia.org/wiki/SimCity_3000" target="_blank" rel="noopener">SimCity 3000</a>, <a href="https://en.wikipedia.org/wiki/SimCity" target="_blank" rel="noopener">SimCity</a>).</p>
+        <p>동현심은 그 뼈대만 아주 작게 만들었다. 지도는 강이 흐르는 평지 하나, 구역은 3×3 셋, 건물은 발전소·경찰서·소방서·공원 넷이다. 상하수도·교통·세율·조례·자문관·시나리오·랜드마크는 없다. 구체적인 수치(값, 유지비, 수요식, 칭호 인구)는 모두 동현심이 정한 것이다.</p>
+        <h3>권리</h3>
+        <p>동현심은 원작 게임의 코드·그림·소리·글·지도를 쓰지 않았다. 타일과 건물 그림 서른아홉은 모두 <code>tools/tiles.py</code>가 글자 격자로 새로 그린 것이고, 소식에 나오는 얼굴은 동현주의 것이다. 동현심은 원작 제작사·발매사(Electronic Arts, Maxis, AKI Corporation 등)와 관계가 없고 승인도 받지 않았다. SimCity는 Electronic Arts의 상표다.</p>
+      </div>
+      <div>
+        <h3>동현심이 만든 것</h3>
+        <p>도시 엔진(전력·길·수요·지가·오염·범죄·세금·이벤트·재해), 판 화면과 마우스·터치 조작, 전체 화면, 동현랭 자금·이벤트·재해 규약, 예제, 타일 그림, 효과음, 문서. 이 부분은 MIT 라이선스다. 동현랭 실행기(<code>donghyun.js</code>)는 <a href="https://github.com/Raspberry-Kim/donghyun-lang" target="_blank" rel="noopener">동현랭</a> v1.55를, 얼굴 그림(<code>sprites.js</code>)은 동현주의 것을 고치지 않고 썼다. 전체 화면은 동현몬의 방식을, 휴대폰 경험(두 번 두드려도 확대되지 않기, 누른 자리 번짐 없애기)은 동현텐의 방식을 따랐다.</p>
+        <h3>얼굴의 출처</h3>
+        <p>포동이 시장은 동현랭의 강아지, 슈슈와 라이언은 동현파, 초파리는 동현초, 둠가이는 동현둠에서 왔다. 얼굴 그림은 동현주의 16×16 글자 격자 그대로다.</p>
+        <h3>글꼴</h3>
+        <p>Black Han Sans, Nanum Gothic Coding, Pretendard — SIL Open Font License 1.1.</p>
+        <h3>시험</h3>
+        <p><code>node qa/core-tests.cjs</code>가 지도, 놓기와 값, 다리와 강 위 전선, 전력 전달, 길 닿기, 성장과 단계, 세금과 유지비, 철거, 재해와 이벤트, 저장과 복원, 규약 예제를 확인한다. <code>node qa/fuzz-play.cjs</code>는 무작위로 수천 번 놓고 부수며 수백 년을 돌려 멈추거나 값이 깨지지 않는지 본다. <code>node qa/ui.cjs</code>는 실제 화면에서 마우스·끌기·터치·두 손가락·전체 화면·규약 오류·저장·휴대폰 폭, 그리고 키보드가 판을 움직이지 않는지를 확인한다.</p>
+      </div>
+    </div>
+    <aside class="maker-note"><span class="eyebrow">만든 사람</span><p>인하대학교 의과대학 김동현 교수는 백신학·감염학을 연구한다. 명랑하고 따뜻한 개발을 지향한다.</p></aside>
+  </section>
+</main>
+<footer><span>동현심 v0.01 · 인하대학교 의과대학 교수 김동현</span><span>작은 도시 · 자금·이벤트·재해만 동현랭으로</span><span><a href="https://raspberry-kim.github.io/donghyun-lang/" target="_blank" rel="noopener">동현랭</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lang" target="_blank" rel="noopener">동현랭 GitHub</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lab12" target="_blank" rel="noopener">동현심 GitHub</a> · <a href="https://raspberry-kim.github.io/donghyun-lab1/" target="_blank" rel="noopener">동현초</a> · <a href="https://raspberry-kim.github.io/donghyun-lab2/" target="_blank" rel="noopener">동현파</a> · <a href="https://raspberry-kim.github.io/donghyun-lab3/" target="_blank" rel="noopener">동현빌</a> · <a href="https://raspberry-kim.github.io/donghyun-lab4/" target="_blank" rel="noopener">동현전</a> · <a href="https://raspberry-kim.github.io/donghyun-lab5/" target="_blank" rel="noopener">동현콥</a> · <a href="https://raspberry-kim.github.io/donghyun-lab6/" target="_blank" rel="noopener">동현텐</a> · <a href="https://raspberry-kim.github.io/donghyun-lab7/" target="_blank" rel="noopener">동현워</a> · <a href="https://raspberry-kim.github.io/donghyun-lab8/" target="_blank" rel="noopener">동현둠</a> · <a href="https://raspberry-kim.github.io/donghyun-lab9/" target="_blank" rel="noopener">동현크</a> · <a href="https://raspberry-kim.github.io/donghyun-lab10/" target="_blank" rel="noopener">동현몬</a> · <a href="https://raspberry-kim.github.io/donghyun-lab11/" target="_blank" rel="noopener">동현주</a></span></footer>
+<script src="./engine.js"></script>
+<script src="./sfx.js"></script>
+<script src="./app.js"></script>
+<script>
+/* 입력 표식 풍선 도움말 */
+(function(){var tip=null,timer=0,cur=null;
+function el(){ if(!tip){ tip=document.createElement('div'); tip.className='mark-tip'; tip.setAttribute('role','tooltip'); document.body.appendChild(tip);} return tip; }
+function show(m){ var t=el(); clearTimeout(timer); cur=m; t.innerHTML=m.getAttribute('data-tip'); t.classList.add('show');
+  var r=m.getBoundingClientRect(); t.style.left='0px'; t.style.top='0px'; var w=t.offsetWidth, x=r.left+r.width/2-w/2; x=Math.max(12,Math.min(x,innerWidth-w-12));
+  t.style.left=x+'px'; t.style.top=(r.bottom+10)+'px'; t.style.setProperty('--ax',(r.left+r.width/2-x)+'px'); }
+function hide(ms){ clearTimeout(timer); timer=setTimeout(function(){ if(tip) tip.classList.remove('show'); cur=null; },ms||0); }
+document.querySelectorAll('.input-marks .mark').forEach(function(m){
+  m.addEventListener('pointerenter',function(e){ if(e.pointerType==='mouse') show(m); });
+  m.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse') hide(120); });
+  m.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse') show(m); });
+  m.addEventListener('pointerup',function(e){ if(e.pointerType!=='mouse') hide(3000); });
+  m.addEventListener('pointercancel',function(e){ if(e.pointerType!=='mouse') hide(3000); });
+  m.addEventListener('focus',function(){ if(m.matches(':focus-visible')) show(m); }); m.addEventListener('blur',function(){ hide(0); });
+});
+addEventListener('scroll',function(){ if(cur) hide(0); },{passive:true});
+})();
+</script>
+</body>
+</html>
+

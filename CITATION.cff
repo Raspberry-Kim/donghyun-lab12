@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "Donghyunsim (동현심): a small city-building laboratory in the manner of SimCity DS, with the starting funds and the event/disaster switches set through the esoteric language Donghyun-lang"
+type: software
+version: "0.01"
+date-released: "2026-11-08"
+authors:
+  - family-names: Kim
+    given-names: Dong Hyun
+    orcid: "https://orcid.org/0000-0001-9883-0229"
+    affiliation: "Inha University College of Medicine"
+license: MIT
+repository-code: "https://github.com/Raspberry-Kim/donghyun-lab12"
+url: "https://raspberry-kim.github.io/donghyun-lab12/"
+abstract: >-
+  Donghyunsim is a browser-based, noncommercial city-building toy that
+  follows only the skeleton of SimCity DS (Nintendo DS, 2007; developed by
+  AKI Corporation and EA Japan, published by Electronic Arts), itself based
+  on SimCity 3000. On a single 40x40 plain crossed by a river the player
+  lays roads and power lines, places 3x3 residential, commercial and
+  industrial zones, and builds a power plant, police and fire stations and
+  parks. Zones that are both powered and reached by a road grow through five
+  levels according to demand, land value, pollution and crime; taxes arrive
+  and upkeep is paid every month, and the city title changes with
+  population. Optional events (festival, donation, tourists, tree planting)
+  and disasters (fire, flood, a giant monster) occur at random. The only
+  settings, the starting funds option (0-2) and the event and disaster
+  switches (0/1), are chosen through a program written in the esoteric
+  programming language Donghyun-lang. Input is mouse and touch only, with
+  fullscreen; keyboard and gamepad are intentionally unsupported. The city
+  is saved in the browser and can be exported to and imported from a
+  .dhcity file. All 39 tiles and icons are drawn anew by tools/tiles.py and
+  the news faces are the 16x16 faces of the Donghyun series; no asset of the
+  original game is used. The MIT license applies to the Donghyunsim code and
+  documentation; the page fonts are under the SIL Open Font License. See
+  LICENSE and CREDITS.md.
+keywords:
+  - city-building game
+  - SimCity
+  - esoteric programming language
+  - JavaScript
+references:
+  - type: software
+    title: "Donghyun-lang (동현랭): a Korean esoteric programming language with a browser playground"
+    authors:
+      - family-names: Kim
+        given-names: Dong Hyun
+        orcid: "https://orcid.org/0000-0001-9883-0229"
+        affiliation: "Inha University College of Medicine"
+    version: "1.55"
+    license: MIT
+    repository-code: "https://github.com/Raspberry-Kim/donghyun-lang"
