@@ -2,7 +2,7 @@
 <html lang="ko" data-theme="light">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="강이 흐르는 40×40 평지에 길·전선·주거·상업·공업 구역을 놓아 도시를 키우는 작은 도시 놀이. 마우스와 터치만으로 놀고, 자금 옵션·이벤트·재해는 동현랭으로 정한다.">
+  <meta name="description" content="강이 흐르는 40×40 평지(땅을 사면 60×60까지)에 길·전선·여섯 구역·발전소·공공시설·랜드마크를 놓아 도시를 키우는 작은 도시 놀이. 마우스와 터치만으로 놀고, 자금 옵션·이벤트·재해는 동현랭으로 정한다.">
   <title>동현심™ · 강가 평지에 작은 도시를 세운다</title>
   <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="./favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
@@ -12,13 +12,13 @@
 <body>
 <header class="header">
   <a class="brand" href="#" aria-label="동현심 첫 화면으로"><span class="brand-main"><img class="brand-icon" src="__BRAND_ICON__" alt="" width="96" height="96">동현<span>심</span><sup>TM</sup></span><i class="brand-divider"></i><span class="brand-sub">CITY BUILDING LAB<small>강가 평지에 작은 도시를 세운다</small></span></a><a class="doi-badge" href="https://doi.org/10.5281/zenodo.24050245" target="_blank" rel="noopener" aria-label="동현심 Zenodo DOI 10.5281/zenodo.24050245" title="Zenodo DOI (모든 버전)"><b>DOI</b><span>10.5281/zenodo.24050245</span></a>
-  <div class="edition">v0.03<button id="sound" class="icon-btn" aria-label="효과음 켜기·끄기" title="효과음" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="snd-on" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="snd-off" d="m16 9 6 6m0-6-6 6"/></svg></button><button id="theme" class="icon-btn" aria-label="밝은 화면과 어두운 화면 전환" title="화면 전환" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></div>
+  <div class="edition">v0.10<button id="sound" class="icon-btn" aria-label="효과음 켜기·끄기" title="효과음" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="snd-on" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="snd-off" d="m16 9 6 6m0-6-6 6"/></svg></button><button id="theme" class="icon-btn" aria-label="밝은 화면과 어두운 화면 전환" title="화면 전환" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></div>
 </header>
 <main>
 __SERIES_NAV__
   <section class="intro">
-    <div><div class="eyebrow">CITY BUILDER × ESOTERIC LANGUAGE</div><h1>작은 도시 실험실: <span class="title-brand">동현<span>심</span><sup>TM</sup></span></h1><p>강이 흐르는 40×40 평지에 <strong>길과 전선</strong>을 깔고 <strong>주거·상업·공업</strong> 구역을 놓으면 사람이 모여 집이 서고 가게와 공장이 올라간다. 발전소·경찰서·소방서·공원으로 도시를 돌보며 촌락에서 수도까지 키운다. <strong>자금 옵션</strong>, <strong>이벤트</strong>, <strong>재해</strong>를 켜고 끄는 것은 <strong>동현랭</strong> 코드가 정한다. 마우스와 손가락만으로 논다.</p></div>
-    <div class="model-stamp"><strong id="stamp-funds">20,000 <span>냥</span></strong><strong id="stamp-flags">이벤트 켬 <span>· 재해 켬</span></strong><small>40×40 평지 · 강 하나 · 구역 셋 · 건물 넷</small><div class="input-marks" role="group" aria-label="입력 표식 · 쓸 수 있는 것: 마우스(터치) · 전체 화면"><span class="mark off kb" tabindex="0" data-tip="키보드 없음 · 이 실험실은 마우스와 손가락으로만 논다. 키보드는 동현랭 코드를 쓸 때만 쓴다." aria-label="키보드 없음"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path class="dots" d="M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M6 13h.01M9.5 13h.01M13 13h.01M16.5 13h.01"/><path d="M8 16h8"/></svg></span><span class="mark on ms" tabindex="0" data-tip="마우스·터치 가능 · 아래 도구를 고르고 판을 누른다. 길·전선·철거는 <b>끌어서</b> 잇고, 구역·건물은 <b>누른 채 옮기다 떼면</b> 놓인다. 두 손가락으로 판을 옮기고 늘린다. 마우스는 바퀴와 가운데 단추로." aria-label="마우스 가능"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="5"/><path d="M12 7v3"/></svg></span><span class="mark off gp" tabindex="0" data-tip="게임패드 없음 · 이 실험실은 게임패드를 읽지 않는다." aria-label="게임패드 없음"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6.5" width="20" height="11" rx="4.5"/><path d="M7 9.6v4.8M4.6 12h4.8"/><circle cx="16.6" cy="9.6" r=".85"/><circle cx="14.4" cy="12" r=".85"/><circle cx="18.8" cy="12" r=".85"/><circle cx="16.6" cy="14.4" r=".85"/><path class="dots" d="M11.3 13.4h.01M12.9 13.4h.01"/></svg></span><span class="mark on fs" tabindex="0" data-tip="전체 화면 가능 · 판 위 오른쪽의 네모 단추. 휴대폰은 가로로 돌려도 좋다. 닫기는 왼쪽 위 ✕." aria-label="전체 화면 가능"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><text class="full" x="12" y="14.6" text-anchor="middle">FULL</text></svg></span></div></div>
+    <div><div class="eyebrow">CITY BUILDER × ESOTERIC LANGUAGE</div><h1>작은 도시 실험실: <span class="title-brand">동현<span>심</span><sup>TM</sup></span></h1><p>강이 흐르는 40×40 평지에서 시작해 <strong>길과 전선</strong>을 깔고 <strong>주거·상업·공업</strong> 구역(고급 주거·백화점·중공업까지 여섯)을 놓으면 사람이 모여 집이 서고 가게와 공장이 올라간다. 발전소 여섯 종·시청과 세율·학교·병원·공원으로 도시를 돌보고, 칭호가 오르면 <strong>땅을 사서</strong> 60×60까지 넓히며 촌락에서 수도까지 키운다. <strong>자금 옵션</strong>, <strong>이벤트</strong>, <strong>재해</strong>를 켜고 끄는 것은 <strong>동현랭</strong> 코드가 정한다. 마우스와 손가락만으로 논다.</p></div>
+    <div class="model-stamp"><strong id="stamp-funds">200,000 <span>냥</span></strong><strong id="stamp-flags">이벤트 켬 <span>· 재해 켬</span></strong><small>40×40 → 60×60 · 강 하나 · 구역 여섯 · 건물 열여덟</small><div class="input-marks" role="group" aria-label="입력 표식 · 쓸 수 있는 것: 마우스(터치) · 전체 화면"><span class="mark off kb" tabindex="0" data-tip="키보드 없음 · 이 실험실은 마우스와 손가락으로만 논다. 키보드는 동현랭 코드를 쓸 때만 쓴다." aria-label="키보드 없음"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path class="dots" d="M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M6 13h.01M9.5 13h.01M13 13h.01M16.5 13h.01"/><path d="M8 16h8"/></svg></span><span class="mark on ms" tabindex="0" data-tip="마우스·터치 가능 · 아래 도구를 고르고 판을 누른다. 길·전선·철거는 <b>끌어서</b> 잇고, 구역·건물은 <b>누른 채 옮기다 떼면</b> 놓인다. 두 손가락으로 판을 옮기고 늘린다. 마우스는 바퀴와 가운데 단추로." aria-label="마우스 가능"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="5"/><path d="M12 7v3"/></svg></span><span class="mark off gp" tabindex="0" data-tip="게임패드 없음 · 이 실험실은 게임패드를 읽지 않는다." aria-label="게임패드 없음"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6.5" width="20" height="11" rx="4.5"/><path d="M7 9.6v4.8M4.6 12h4.8"/><circle cx="16.6" cy="9.6" r=".85"/><circle cx="14.4" cy="12" r=".85"/><circle cx="18.8" cy="12" r=".85"/><circle cx="16.6" cy="14.4" r=".85"/><path class="dots" d="M11.3 13.4h.01M12.9 13.4h.01"/></svg></span><span class="mark on fs" tabindex="0" data-tip="전체 화면 가능 · 판 위 오른쪽의 네모 단추. 휴대폰은 가로로 돌려도 좋다. 닫기는 왼쪽 위 ✕." aria-label="전체 화면 가능"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><text class="full" x="12" y="14.6" text-anchor="middle">FULL</text></svg></span></div></div>
   </section>
   <nav class="tabs" aria-label="동현심 메뉴"><button class="active" data-tab="play" aria-current="page">놀이</button><button data-tab="protocol">동현심 규약</button><button data-tab="rules">놀이 방법</button><button data-tab="about">원작과 출처</button><span>자금·이벤트·재해는 동현랭으로, 도시는 손으로</span></nav>
   <div class="getting-started"><p><strong>처음이라면?</strong> 예제를 고르고 <b>시작</b>을 눌러 보자. 발전소를 하나 세우고, 길을 깔고, 길가에 주거 구역을 놓은 뒤 전선으로 발전소와 이어 주면 집이 선다. 시작 자금과 이벤트·재해는 모두 <b>동현랭</b> 명령으로만 정한다.</p><a href="https://raspberry-kim.github.io/donghyun-lang/" target="_blank" rel="noopener">동현랭 배우기 · 실행기 ↗</a></div>
@@ -30,9 +30,13 @@ __SERIES_NAV__
         <div class="sim-wrap" id="stage">
           <button id="exit-full" class="sim-exit" hidden aria-label="전체 화면 닫기">✕ 전체 화면 닫기</button>
           <div class="sim-top">
-            <div class="sim-chip money"><span>자금</span><strong id="funds">20,000</strong></div>
+            <div class="sim-chip money"><span>자금</span><strong id="funds">200,000</strong></div>
             <div class="sim-chip"><span id="title">촌락</span><strong id="pop">0</strong></div>
             <div class="sim-chip date"><span>날짜</span><strong id="date">1년 1월</strong></div>
+            <div class="sim-chip sat"><span>만족</span><strong id="sat">50</strong></div>
+            <div class="sim-chip tax" id="tax-chip"><label for="tax">세율</label><input type="range" id="tax" min="5" max="15" step="1" value="10" disabled aria-label="세율"><strong id="tax-val">10%</strong></div>
+            <div class="sim-chip size"><span>판</span><strong id="size">40×40</strong></div>
+            <div class="sim-ach" id="ach" aria-label="업적"></div>
             <div class="sim-rci" aria-label="수요: 주거·상업·공업"><i data-k="R"><b></b><span>주</span></i><i data-k="C"><b></b><span>상</span></i><i data-k="I"><b></b><span>공</span></i></div>
             <div class="sim-speed" role="group" aria-label="속도"><button data-speed="0" aria-label="멈춤" title="멈춤"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button><button data-speed="1" aria-label="보통" title="보통" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button><button data-speed="2" aria-label="빠름" title="빠름"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5v14l9-7zM12 5v14l9-7z"/></svg></button><button data-speed="3" aria-label="아주 빠름" title="아주 빠름"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 6v12l7-6zM8.5 6v12l7-6zM16 6v12l7-6z"/></svg></button></div>
             <button id="full" class="sim-round" aria-label="전체 화면" title="전체 화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -44,12 +48,13 @@ __SERIES_NAV__
             <div class="sim-info" id="info" hidden></div>
             <div class="menu-back" id="menu-back"><div class="game-menu center" id="menu" role="menu" hidden></div></div>
           </div>
+          <div class="sim-toolgroups" id="toolgroups" role="tablist" aria-label="도구 묶음"></div>
           <div class="sim-tools" id="tools" role="toolbar" aria-label="도구"></div>
           <ul class="sim-news" id="news" aria-live="polite" aria-label="소식"></ul>
           <div class="sim-over" id="ready" hidden>
             <div class="sim-card" role="dialog" aria-modal="true" aria-labelledby="ready-title">
               <h3 id="ready-title">동현심</h3>
-              <p id="ready-note">보통 20,000냥 · 이벤트 켬 · 재해 켬</p>
+              <p id="ready-note">보통 200,000냥 · 이벤트 켬 · 재해 켬</p>
               <button id="begin" class="dh-btn dh-run">새 도시 시작</button>
               <p class="sim-ready-hint" id="ready-hint">시작하면 달이 흐른다 · 저장한 도시는 동현랭 코드 아래 <b>저장한 판 불러오기</b>에서 고른다</p>
             </div>
@@ -86,24 +91,27 @@ __SERIES_NAV__
         <h3>정하는 것은 세 숫자다</h3>
         <ul>
           <li>동현랭 코드가 출력한 <strong>첫 정수</strong>가 자금 옵션, <strong>둘째 정수</strong>가 이벤트, <strong>셋째 정수</strong>가 재해다.</li>
-          <li>자금 옵션은 <code>0</code> 넉넉하게 50,000냥, <code>1</code> 보통 20,000냥, <code>2</code> 빠듯하게 10,000냥, <code>3</code> 아주 넉넉하게 100,000냥이다. 이벤트와 재해는 <code>0</code>이 끔, <code>1</code>이 켬이다.</li>
+          <li>자금 옵션은 <code>0</code> 넉넉하게 500,000냥, <code>1</code> 보통 200,000냥, <code>2</code> 빠듯하게 100,000냥, <code>3</code> 아주 넉넉하게 1,000,000냥이다. 이벤트와 재해는 <code>0</code>이 끔, <code>1</code>이 켬이다.</li>
           <li>기본값은 <code>1 1 1</code>(보통 · 이벤트 켬 · 재해 켬)이다. 아무것도 출력하지 않으면 이 값으로 시작한다.</li>
           <li>정수를 셋이 아닌 개수로 출력하거나 범위를 벗어나면 시작하지 않고 오류를 알려 준다.</li>
           <li>코드는 새 도시를 시작할 때만 읽는다. 이어 하는 도시는 저장될 때의 설정을 그대로 쓴다.</li>
         </ul>
         <h3>예제</h3>
-        <p><strong>01 · 기본 모드</strong>는 <code>뿡뿡 도옹~뿡뿡뿡</code>을 세 번 써서 1 1 1을 출력한다. <strong>02 · 자금 옵션</strong>은 첫 정수를 <code>도옹ㅠ</code>(0)으로 바꿔 50,000냥으로 시작하고, <strong>03 · 이벤트 끄기</strong>는 둘째를, <strong>04 · 재해 끄기</strong>는 셋째를 0으로 둔다. <strong>05 · 자금 옵션 100,000냥</strong>은 첫 정수를 <code>도오오옹</code>(3)으로 두고, <strong>06</strong>은 3 0 0으로 100,000냥에 이벤트도 재해도 끈 모래 놀이판이다.</p>
+        <p><strong>01 · 기본 모드</strong>는 <code>뿡뿡 도옹~뿡뿡뿡</code>을 세 번 써서 1 1 1을 출력한다. <strong>02 · 자금 옵션</strong>은 첫 정수를 <code>도옹ㅠ</code>(0)으로 바꿔 500,000냥으로 시작하고, <strong>03 · 이벤트 끄기</strong>는 둘째를, <strong>04 · 재해 끄기</strong>는 셋째를 0으로 둔다. <strong>05 · 자금 옵션 100,000냥</strong>은 첫 정수를 <code>도오오옹</code>(3)으로 두고, <strong>06</strong>은 3 0 0으로 100,000냥에 이벤트도 재해도 끈 모래 놀이판이다.</p>
       </div>
       <div>
         <h3>코드가 하지 않는 것</h3>
         <p>동현랭 코드는 길을 깔거나 구역을 놓지 않는다. 지도는 하나로 정해져 있고(강이 흐르는 평지), 어디에 무엇을 놓을지는 사람이 손으로 한다.</p>
         <h3>값</h3>
         <ul>
-          <li>길 한 칸 10냥(강 위 다리 50냥), 전선 한 칸 5냥(강 위 25냥), 구역 3×3 100냥, 공원 한 칸 30냥, 발전소 3,000냥, 경찰서·소방서 500냥, 철거 한 칸 1냥(구역·건물은 9냥).</li>
-          <li>달마다 유지비가 나간다: 발전소 40냥, 경찰서·소방서 30냥, 그 밖에 길·전선·공원도 조금씩. 세금은 사람 수와 가게·공장 크기에 따라 달마다 들어오고, 해마다 1월에 결산을 알려 준다.</li>
-          <li>발전소 하나가 구역·건물 40개에 전기를 준다. 전기는 전선·구역·건물을 따라 이어지고, 전선은 길과 강 위에도 놓을 수 있다.</li>
-          <li>구역은 둘레에 길이 닿고 전기가 들어와야 자란다. 주거는 일자리가 있으면, 상업은 사람이 있으면, 공업은 사람이 많으면 수요가 생긴다. 지가가 높으면 더 높은 건물로 자란다(1~5단계).</li>
-          <li>칭호는 인구로 바뀐다: 촌락 → 마을 500 → 읍 2,000 → 도시 10,000 → 대도시 30,000 → 수도 60,000.</li>
+          <li>길 한 칸 10냥(강 위 다리 50냥), 전선 한 칸 5냥(강 위 25냥), 공원 한 칸 30냥, 철거 한 칸 1냥(구역·건물은 9냥). 구역 3×3은 주거·시장·경공업 100냥, 중공업 200냥, 고급 주거 300냥, 백화점 400냥.</li>
+          <li>발전소 여섯: 화력 3,000냥(구역 40곳 · 오염), 수력 8,000냥(강가 · 25곳 · 홍수에 멈춤), 풍력 1,500냥(1×1 · 8곳 · 읍부터), 태양광 5,000냥(2×2 · 12곳 · 도시 또는 100년차부터), 원자력 60,000냥(150곳 · 도시와 시청 뒤 · 드물게 누출), 핵융합 1,000,000냥(무한 · 수도와 누적 세입 100만냥 뒤).</li>
+          <li>공공시설: 경찰서·소방서 500냥, 시청 50,000냥(4×4 · 도시부터 · 증축 100,000·200,000냥), 학교 2,000냥·병원 3,000냥·도서관 1,500냥(2×2)은 마을부터, 미술관 10,000냥·음악당 15,000냥은 읍부터. 랜드마크는 하나씩: 동현타워 200,000냥(4×4 · 지가), 경기장 300,000냥(4×4 · 상업 수요), 항구 150,000냥(강가 · 읍부터 · 공업 수요), 공항 500,000냥(4×4 · 대도시부터 · 수요와 오염).</li>
+          <li>땅 사기: 칭호마다 살 수 있는 줄이 는다(마을 2 · 읍 4 · 도시 6 · 대도시 8). 한 줄은 북·남·동·서 가운데 한쪽 5칸이고 값은 20,000냥부터 한 줄마다 20,000냥씩 오른다. 40×40에서 최대 60×60까지.</li>
+          <li>달마다 유지비가 나간다: 화력 40냥, 원자력 150냥, 핵융합 200냥, 경찰서·소방서 30냥, 시청 100냥, 학교 25냥, 병원 35냥, 공항 300냥, 그 밖에 길·전선·공원도 조금씩. 세금은 구역 단계에 따라 달마다 들어오고(주거 10 · 고급 주거 30 · 시장 12 · 백화점 24 · 경공업 10 · 중공업 18, 단계마다), 세율 10%가 기본이며 해마다 1월에 결산을 알려 준다. 30년마다 길 한 칸에 3냥씩 도로 보수비가 나간다.</li>
+          <li>전기는 전선·구역·건물을 따라 이어지고, 전선은 길과 강 위에도 놓을 수 있다. 발전소는 수명(화력·수력·원자력 600달, 태양광 480달, 풍력 360달)이 다하면 낡아 용량이 반이 된다. 공공시설·랜드마크도 전기가 와야 일한다. <strong>보수</strong> 도구로 누르면 원가의 30%로 새것이 된다.</li>
+          <li>구역은 둘레에 길이 닿고 전기가 들어와야 자란다. 주거는 일자리가 있으면, 상업은 사람이 있으면, 공업은 사람이 많으면 수요가 생긴다. 지가가 높으면 더 높은 건물로 자란다(1~5단계 · 주거는 지가 20·28에서 벽이 있고 학교 권역이면 16·22로 낮아진다). 고급 주거는 지가 22 이상, 백화점은 2단계부터 지가 18 이상에서만 자란다. 주거는 단계마다 160명, 고급 주거는 100명(세금은 세 배).</li>
+          <li>칭호는 인구로 바뀐다: 촌락 → 마을 500 → 읍 2,000 → 도시 10,000 → 대도시 30,000 → 수도 60,000. 칭호가 오르면 새 구역·건물·땅이 열린다.</li>
         </ul>
       </div>
     </div>
@@ -121,6 +129,9 @@ __SERIES_NAV__
           <li><strong>이동</strong> 도구로 판을 끌면 보는 자리가 옮겨진다. 어떤 도구를 쥐고 있어도 <strong>두 손가락</strong>으로 끌면 옮겨지고, 벌리면 커진다. 마우스는 바퀴로 늘리고 줄이며, 가운데 단추나 오른 단추로 끌면 옮겨진다. 판 오른쪽 아래의 +·−·⤢ 단추도 같다.</li>
           <li><strong>정보</strong> 도구로 칸을 누르면 그 칸이 무엇인지, 전기·길·지가·오염·치안이 어떤지 말해 준다.</li>
           <li>판 왼쪽 위의 <strong>보기</strong> 단추로 전력·오염·범죄·지가를 색으로 겹쳐 볼 수 있다.</li>
+          <li>도구는 <strong>기본 · 구역 · 발전소 · 공공 · 랜드마크</strong> 다섯 묶음으로 나뉜다. 아직 열리지 않은 도구는 흐리게 보이고 값 자리에 조건(마을부터 · 시청이 선 뒤 …)이 적힌다.</li>
+          <li><strong>땅 사기</strong> 도구를 쥐고 판을 누르면 북·남·동·서 가운데 어느 쪽을 살지 고르는 메뉴가 뜬다. 산 뒤에는 판이 그쪽으로 다섯 칸 넓어진다.</li>
+          <li><strong>시청</strong>을 세운 뒤 시청 단추를 다시 누르거나 시청 도구로 판을 누르면 메뉴가 뜬다. 위의 <strong>세율</strong> 막대(5~15%, 시청 2단계면 20%)를 끌어 세금을 바꾸고, 조례 넷(공해 규제·야간 순찰 · 2단계부터 관광 홍보·녹지 보전)을 켜고 끄며, 증축한다.</li>
         </ul>
         <h3>처음 도시</h3>
         <p>발전소(3,000냥)를 하나 세운다. 발전소에서 조금 떨어진 곳에 길을 한 줄 깔고, 길가에 주거 구역 두어 개와 상업·공업 구역을 놓는다. 전선을 발전소에서 구역까지 끌어 이으면(구역끼리 붙어 있으면 전기가 서로 전해진다) 몇 달 안에 집이 선다. 번개 표시는 전기가 없다는 뜻, 회색 길 표시는 길이 닿지 않는다는 뜻이다.</p>
@@ -130,6 +141,11 @@ __SERIES_NAV__
         <ul>
           <li>공장은 오염을 내고, 오염이 높은 곳은 지가가 내려 집이 잘 자라지 않는다. 공업 구역은 주거에서 조금 떨어뜨리고 사이에 공원을 두면 좋다. 강과 나무도 지가를 올린다.</li>
           <li>사람이 늘면 범죄가 는다. <strong>경찰서</strong>는 둘레의 범죄를 누르고, <strong>소방서</strong>는 불이 번지는 것을 막고 빨리 끈다.</li>
+          <li><strong>학교</strong> 권역의 주거는 지가 벽이 낮아져 더 높이 자라고, <strong>병원</strong> 권역은 사람이 1.1배 산다(잔해도 빨리 치운다). <strong>도서관</strong>은 작은 학교 구실에 둘레 지가를 조금 올리고, <strong>미술관·음악당</strong>은 문화 권역을 만들어 만족도를 올리며, 이벤트가 켜져 있으면 관광객이 몰려 석 달 동안 세금이 두 배가 되는 일이 잦아진다.</li>
+          <li>위의 <strong>만족</strong> 칸은 주민 만족도 0~100이다. 경찰·소방·학교·병원·문화 권역이 올리고 오염·범죄·높은 세율·전기 없음이 내린다. 75 이상이면 구역이 1.2배 빨리 자라고 40 아래면 0.6배로 느려지며 7월에 불만 소식이 뜬다.</li>
+          <li>세율을 10%보다 높이면 세금은 늘지만 수요가 준다(1%마다 0.02). 세율은 시청이 서야 바꿀 수 있다.</li>
+          <li>발전소·건물은 세월이 지나면 낡는다(소식과 판 위의 <b>!</b> 표식). 낡은 발전소는 용량이 반이니 <strong>보수</strong> 도구로 고친다. 30년마다 도로 보수비가 한꺼번에 나간다.</li>
+          <li><strong>업적</strong> 여섯(위 오른쪽 작은 배지): 수도 달성 · 맑은 하늘 한 해 · 재해 무피해 10년 · 만족도 90 · 핵융합 시대 · 랜드마크 넷. 배지에 마우스를 올리면 조건이 보인다.</li>
           <li>돈이 모자라면 짓지 못한다. 달마다 세금이 들어오니 조금 기다리거나, 쓸모없는 길과 전선을 철거해 유지비를 줄인다.</li>
           <li>위의 멈춤·보통·빠름·아주 빠름 단추로 달이 흐르는 빠르기를 바꾼다. 다른 탭을 보거나 창을 벗어나면 저절로 멎는다. 저장은 저절로 되지 않으니 판 아래 <strong>저장</strong>을 누른다.</li>
         </ul>
@@ -142,7 +158,7 @@ __SERIES_NAV__
         <h3>이벤트와 재해</h3>
         <ul>
           <li><strong>이벤트</strong>(켜 두었다면): 포동이 시장의 축제로 가게가 붐비고, 슈슈가 기부금을 보내고, 관광객이 몰려 세금이 늘고, 초파리 떼가 나무를 심어 준다.</li>
-          <li><strong>재해</strong>(켜 두었다면): 불이 나 번지고, 강이 넘쳐 강가를 적시고, 거대 라이언이 도시를 가로질러 밟고 지나간다. 소방서가 가까우면 불은 빨리 꺼지고, 부서진 자리는 철거하면 다시 쓸 수 있다.</li>
+          <li><strong>재해</strong>(켜 두었다면): 불이 나 번지고, 강이 넘쳐 강가를 적시고, 거대 라이언이 "어흥!" 하며 도시를 가로질러 밟고 지나간다. 토네이도가 다섯 달 동안 판을 가로지르며 지나는 자리를 쓸고, 지진이 건물 몇 곳을 무너뜨리고 길을 끊으며(판이 흔들린다), 정전이 발전소 하나를 고장 내 용량을 반으로 만들고(보수 도구로 고친다), 원자력 발전소가 있으면 드물게 누출로 둘레가 잔해가 된다. 소방서가 가까우면 불은 빨리 꺼지고, 부서진 자리는 철거하면 다시 쓸 수 있다.</li>
         </ul>
         <h3>끝</h3>
         <p>정해진 끝은 없다. 인구 60,000의 <strong>수도</strong>가 되면 최고 칭호다. 돈이 바닥나도 도시는 멈추지 않지만 아무것도 지을 수 없으니, 그 전에 살림을 맞추자.</p>
@@ -174,7 +190,7 @@ __SERIES_NAV__
     <aside class="maker-note"><span class="eyebrow">만든 사람</span><p>인하대학교 의과대학 김동현 교수는 백신학·감염학을 연구한다. 명랑하고 따뜻한 개발을 지향한다.</p></aside>
   </section>
 </main>
-<footer><span>동현심 v0.03 · 인하대학교 의과대학 교수 김동현</span><span>작은 도시 · 자금·이벤트·재해만 동현랭으로</span><span><a href="https://raspberry-kim.github.io/donghyun-lang/" target="_blank" rel="noopener">동현랭</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lang" target="_blank" rel="noopener">동현랭 GitHub</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lab12" target="_blank" rel="noopener">동현심 GitHub</a> · <a href="https://raspberry-kim.github.io/donghyun-lab1/" target="_blank" rel="noopener">동현초</a> · <a href="https://raspberry-kim.github.io/donghyun-lab2/" target="_blank" rel="noopener">동현파</a> · <a href="https://raspberry-kim.github.io/donghyun-lab3/" target="_blank" rel="noopener">동현빌</a> · <a href="https://raspberry-kim.github.io/donghyun-lab4/" target="_blank" rel="noopener">동현전</a> · <a href="https://raspberry-kim.github.io/donghyun-lab5/" target="_blank" rel="noopener">동현콥</a> · <a href="https://raspberry-kim.github.io/donghyun-lab6/" target="_blank" rel="noopener">동현텐</a> · <a href="https://raspberry-kim.github.io/donghyun-lab7/" target="_blank" rel="noopener">동현워</a> · <a href="https://raspberry-kim.github.io/donghyun-lab8/" target="_blank" rel="noopener">동현둠</a> · <a href="https://raspberry-kim.github.io/donghyun-lab9/" target="_blank" rel="noopener">동현크</a> · <a href="https://raspberry-kim.github.io/donghyun-lab10/" target="_blank" rel="noopener">동현몬</a> · <a href="https://raspberry-kim.github.io/donghyun-lab11/" target="_blank" rel="noopener">동현주</a></span></footer>
+<footer><span>동현심 v0.10 · 인하대학교 의과대학 교수 김동현</span><span>작은 도시 · 자금·이벤트·재해만 동현랭으로</span><span><a href="https://raspberry-kim.github.io/donghyun-lang/" target="_blank" rel="noopener">동현랭</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lang" target="_blank" rel="noopener">동현랭 GitHub</a> · <a href="https://github.com/Raspberry-Kim/donghyun-lab12" target="_blank" rel="noopener">동현심 GitHub</a> · <a href="https://raspberry-kim.github.io/donghyun-lab1/" target="_blank" rel="noopener">동현초</a> · <a href="https://raspberry-kim.github.io/donghyun-lab2/" target="_blank" rel="noopener">동현파</a> · <a href="https://raspberry-kim.github.io/donghyun-lab3/" target="_blank" rel="noopener">동현빌</a> · <a href="https://raspberry-kim.github.io/donghyun-lab4/" target="_blank" rel="noopener">동현전</a> · <a href="https://raspberry-kim.github.io/donghyun-lab5/" target="_blank" rel="noopener">동현콥</a> · <a href="https://raspberry-kim.github.io/donghyun-lab6/" target="_blank" rel="noopener">동현텐</a> · <a href="https://raspberry-kim.github.io/donghyun-lab7/" target="_blank" rel="noopener">동현워</a> · <a href="https://raspberry-kim.github.io/donghyun-lab8/" target="_blank" rel="noopener">동현둠</a> · <a href="https://raspberry-kim.github.io/donghyun-lab9/" target="_blank" rel="noopener">동현크</a> · <a href="https://raspberry-kim.github.io/donghyun-lab10/" target="_blank" rel="noopener">동현몬</a> · <a href="https://raspberry-kim.github.io/donghyun-lab11/" target="_blank" rel="noopener">동현주</a></span></footer>
 <script src="./engine.js"></script>
 <script src="./sfx.js"></script>
 <script src="./app.js"></script>

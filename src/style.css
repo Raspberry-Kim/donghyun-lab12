@@ -193,7 +193,12 @@ code.wrap{word-break:break-all}
 .sim-zoom button{min-height:0;width:36px;height:36px;padding:0;border:0;border-radius:8px;background:rgba(20,18,14,.6);color:#fff;font:700 18px/1 var(--body)}
 .sim-info{position:absolute;left:8px;bottom:8px;max-width:calc(100% - 60px);padding:8px 10px;border-radius:8px;background:rgba(20,18,14,.78);color:#f3efe6;font:500 12px/1.5 var(--body);pointer-events:none}
 .sim-info b{color:#f2b705}
-.sim-tools{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:10px}
+.sim-toolgroups{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap}
+.sim-toolgroups button{padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:var(--paper);color:var(--muted);font:600 12px var(--body);cursor:pointer}
+.sim-toolgroups button.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.sim-toolgroups button:hover:not(.on){background:var(--surface2)}
+.sim-tools{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:6px}
+.sim-tools button[hidden]{display:none}
 .sim-tools button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;padding:5px 2px 4px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);font:600 10.5px/1.15 var(--body);white-space:nowrap}
 .sim-tools button canvas{width:24px;height:24px;image-rendering:pixelated}
 .sim-tools button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -201,6 +206,12 @@ code.wrap{word-break:break-all}
 .sim-tools button.on{background:var(--accent);border-color:var(--accent);color:#26211c}.sim-tools button.on small{color:#4a3e0c}
 .sim-tools button:hover:not(.on){background:var(--surface2)}
 .sim-tools button.poor{opacity:.55}
+.sim-tools button.locked{opacity:.45;filter:grayscale(.6)}.sim-tools button.locked small{color:var(--sim-no);font-size:9px;white-space:normal;line-height:1.15}
+.sim-chip.sat.low strong{color:var(--sim-no)}.sim-chip.sat.high strong{color:var(--sim-ok,#3fae52)}
+.sim-chip.tax{flex-direction:row;gap:6px;min-width:0;padding:5px 10px}.sim-chip.tax label{font-size:11px;letter-spacing:.04em;color:var(--muted)}.sim-chip.tax input{width:84px;accent-color:var(--accent);margin:0}.sim-chip.tax input:disabled{opacity:.4}.sim-chip.tax strong{font-size:15px;min-width:34px;text-align:right}
+.sim-chip.size strong{font-size:15px}
+.sim-ach{display:flex;gap:3px;align-items:center;padding:4px 8px;border:1px solid var(--line);border-radius:10px;background:var(--paper);min-height:44px}
+.sim-ach i{font-style:normal;font-size:15px;line-height:1;opacity:.22;filter:grayscale(1);cursor:help}.sim-ach i.got{opacity:1;filter:none}
 .sim-news{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;min-height:34px}
 .sim-news li{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:8px;background:var(--surface2);font-size:var(--text-xs);color:var(--ink);line-height:1.4}
 .sim-news li canvas{width:24px;height:24px;flex:none;image-rendering:pixelated}
@@ -223,7 +234,8 @@ code.wrap{word-break:break-all}
 html.pseudo-full-on,html.pseudo-full-on body{overflow:hidden;overscroll-behavior:none}
 .sim-wrap.fs{max-width:none;margin:0;border:0;border-radius:0;box-shadow:none;display:flex;flex-direction:column;gap:8px;box-sizing:border-box;padding:calc(8px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));color:#e8e1d3}
 .sim-wrap.fs .sim-top{margin:0;padding-left:150px}
-.sim-wrap.fs .sim-chip,.sim-wrap.fs .sim-rci,.sim-wrap.fs .sim-speed,.sim-wrap.fs .sim-round{background:#1c1a16;border-color:#3a352d;color:#e8e1d3}
+.sim-wrap.fs .sim-chip,.sim-wrap.fs .sim-rci,.sim-wrap.fs .sim-speed,.sim-wrap.fs .sim-round,.sim-wrap.fs .sim-ach{background:#1c1a16;border-color:#3a352d;color:#e8e1d3}
+.sim-wrap.fs .sim-toolgroups button{background:#1c1a16;border-color:#3a352d;color:#b7af9f}.sim-wrap.fs .sim-toolgroups button.on{background:#e8e1d3;color:#1c1a16}.sim-wrap.fs .sim-toolgroups{margin:0 0 4px}
 .sim-wrap.fs .sim-chip span{color:#b7af9f}
 .sim-wrap.fs .sim-main{flex:1 1 0;min-height:0;display:flex;align-items:center;justify-content:center}
 .sim-wrap.fs .sim-board{width:auto;height:auto;max-width:100%;max-height:100%;aspect-ratio:auto}
@@ -238,16 +250,17 @@ html.pseudo-full-on,html.pseudo-full-on body{overflow:hidden;overscroll-behavior
 html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed button,.sim-view button,.sim-zoom button,.sim-over{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 @media(max-width:780px){
   .sim-wrap{padding:8px;border-radius:10px}
-  .sim-top{gap:5px}.sim-chip{min-width:0;flex:1 1 0;padding:4px 6px}.sim-chip strong{font-size:16px}.sim-chip.date{display:none}
+  .sim-top{gap:5px}.sim-chip{min-width:0;flex:1 1 auto;padding:4px 6px}.sim-chip.tax{flex:0 0 auto}.sim-chip strong{font-size:16px}.sim-chip.date{display:none}
   .sim-rci{height:40px;padding:0 4px}.sim-rci i{width:13px}.sim-rci i b{width:8px}
   .sim-speed button{min-width:30px;height:34px;padding:0 3px;font-size:10px}.sim-round{width:40px;height:40px}
-  .sim-tools{grid-template-columns:repeat(6,1fr)}
+  .sim-tools{grid-template-columns:repeat(4,1fr)}
   .sim-tools button{min-height:52px;font-size:10px}
+  .sim-chip.size,.sim-ach{display:none}.sim-chip.tax input{width:60px}.sim-toolgroups button{padding:4px 9px;font-size:11px}
   .sim-view button{height:26px;padding:0 6px;font-size:10px}
   .sim-wrap.fs .sim-top{padding-left:0;padding-top:40px}
-  .sim-wrap.fs .sim-tools{grid-template-columns:repeat(12,1fr)}.sim-wrap.fs .sim-tools button{min-height:44px}.sim-wrap.fs .sim-tools button small{display:none}
+  .sim-wrap.fs .sim-tools{grid-template-columns:repeat(8,1fr)}.sim-wrap.fs .sim-tools button{min-height:44px}.sim-wrap.fs .sim-tools button small{display:none}
 }
-@media(max-width:420px){.sim-wrap.fs .sim-tools{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:420px){.sim-wrap.fs .sim-tools{grid-template-columns:repeat(4,1fr)}}
 @media(prefers-reduced-motion:reduce){.sim-news li.new{animation:none}}
 
 /* 입력 표식: 머리글 오른쪽에 붙여 정렬, 켜진 아이콘만 이 실험실에서 쓸 수 있는 입력. 네 번째는 전체 화면 */
