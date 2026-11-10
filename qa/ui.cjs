@@ -103,8 +103,8 @@ const H='window.__donghyunsim';
   assert.strictEqual(await G('S.paused'),true); assert.deepStrictEqual(await p.evaluate(()=>[1,2,3].map(n=>!!localStorage.getItem('donghyunsim:slot'+n))),[false,false,false],'숨길 때 저절로 저장하지 않는다'); const m2=await G('c.month'); await p.waitForTimeout(1200); assert.strictEqual(await G('c.month'),m2);
   await p.evaluate(()=>{ Object.defineProperty(document,'hidden',{get:()=>false,configurable:true}); document.dispatchEvent(new Event('visibilitychange')); }); assert.strictEqual(await G('S.paused'),false); ok('숨기면 멎는다');
   // 14) 시리즈 띠: 13개 · 한 줄(1280)
-  assert.strictEqual(await p.$eval('.series-links',e=>e.children.length),16); const bh=await p.$eval('.series-links',e=>e.getBoundingClientRect().height); assert.ok(bh>70&&bh<160,'두 줄 '+bh);
-  assert.strictEqual(await p.$eval('.series-item.is-current .series-name',e=>e.textContent.replace('™','')),'동현심'); ok('시리즈 띠 16 · 두 줄');
+  assert.strictEqual(await p.$eval('.series-links',e=>e.children.length),18); const bh=await p.$eval('.series-links',e=>e.getBoundingClientRect().height); assert.ok(bh>70&&bh<160,'두 줄 '+bh);
+  assert.strictEqual(await p.$eval('.series-item.is-current .series-name',e=>e.textContent.replace('™','')),'동현심'); ok('시리즈 띠 18 · 두 줄');
   await p.evaluate(()=>localStorage.clear());
   // 15) 휴대폰: 터치만으로 시작·도구·길 끌기·3×3 놓기·두 손가락 옮기기, 그리고 전체 화면
   const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true}); const m=await ctx.newPage();
@@ -129,7 +129,7 @@ const H='window.__donghyunsim';
   const cx1=await MG('S.cam.x'); await touch([{type:'start',pts:[{id:1,x:mid.x-30,y:mid.y}]},{type:'start',pts:[{id:2,x:mid.x+30,y:mid.y}]},{type:'move',pts:[{id:1,x:mid.x-90,y:mid.y},{id:2,x:mid.x-30,y:mid.y}]},{type:'end',pts:[{id:1,x:mid.x-90,y:mid.y},{id:2,x:mid.x-30,y:mid.y}]}]);
   assert.ok((await MG('S.cam.x'))>cx1,'두 손가락으로 옮김');
   await m.tap('#full'); await m.waitForTimeout(500); assert.ok(await MG('S.isFull()')); assert.ok((await m.$eval('#board',e=>e.getBoundingClientRect().width))>=360); await m.tap('#exit-full'); await m.waitForTimeout(300); assert.ok(!(await MG('S.isFull()')));
-  assert.strictEqual(await m.$eval('.series-links',e=>e.children.length),16); assert.notStrictEqual(await m.$eval('.series-item[data-series="lang"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','짝수면 동현랭도 반 폭'); assert.notStrictEqual(await m.$eval('.series-item[data-series="zooo"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','13개(홀수)면 동현랭만 크다');
+  assert.strictEqual(await m.$eval('.series-links',e=>e.children.length),18); assert.notStrictEqual(await m.$eval('.series-item[data-series="lang"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','짝수면 동현랭도 반 폭'); assert.notStrictEqual(await m.$eval('.series-item[data-series="zooo"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','13개(홀수)면 동현랭만 크다');
   ok('휴대폰: 터치 시작·발전소·길 끌기·두 손가락·전체 화면·띠');
   await ctx.close(); await b.close();
   if(errs.length){ console.error('콘솔 오류',errs); process.exit(1); }
