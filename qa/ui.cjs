@@ -3,10 +3,10 @@
 const {chromium}=require('/home/user/node_modules/playwright'); const path=require('path'); const assert=require('assert');
 const GROUP_OF=id=>['pan','info','road','wire','park','bull','repair','land'].includes(id)?0:['R','RH','C','CD','I','IH'].includes(id)?1:['power','hydro','wind','nuclear','solar','fusion'].includes(id)?2:['tower','stadium','airport','harbor'].includes(id)?4:3;
 async function tool(pg,id,tap){ const gsel=`#toolgroups button[data-group="${GROUP_OF(id)}"]`, tsel=`#tools button[data-tool="${id}"]`; if(tap){ await pg.tap(gsel); await pg.tap(tsel); } else { await pg.click(gsel); await pg.click(tsel); } }
-const url='file://'+path.join(__dirname,'..','index.html');
+const url=process.argv[2]||'file://'+path.join(__dirname,'..','index.html');
 const H='window.__donghyunsim';
 (async()=>{
-  const b=await chromium.launch(); const errs=[]; let n=0; const ok=(name)=>{ n++; console.log('ok',name); };
+  const b=await chromium.launch({channel:'chromium'}); const errs=[]; let n=0; const ok=(name)=>{ n++; console.log('ok',name); };
   const p=await b.newPage({viewport:{width:1280,height:900}});
   p.on('pageerror',e=>errs.push(e.message)); p.on('console',m=>{ if(m.type()==='error') errs.push(m.text()); });
   await p.goto(url); await p.waitForTimeout(400);
@@ -75,11 +75,14 @@ const H='window.__donghyunsim';
   await p.click('#city-load'); assert.match(await menuText(),/^불러오기/); await p.click('.game-menu .mi.off'); assert.match(await menuText(),/^불러오기/,'빈 칸 3은 눌리지 않는다');
   await mi('브라우저 칸 1'); assert.match(await menuText(),/지금 도시를 두고 불러올까/); await mi('그만둔다'); await mi('돌아가기'); assert.strictEqual(await G('c.month'),mSave+3,'취소하면 그대로');
   await p.click('#city-load'); await mi('브라우저 칸 1'); await mi('불러온다'); assert.strictEqual(await G('c.month'),mSave,'칸 1의 시점'); assert.strictEqual(await G('JSON.stringify([c.funds,c.month,c.zones.filter(Boolean).length])'),saved); assert.strictEqual(await G('S.settings.fundsOpt'),0,'저장된 설정(넉넉)'); assert.strictEqual(await p.$eval('#set-card',e=>e.textContent.includes('넉넉')),true);
+  // 불러오기는 정상적으로 시간이 다시 흐른다. 정확한 스냅샷 비교 전 실제 멈춤 단추를 누른다.
+  await p.click('.sim-speed button[data-speed="0"]');
   // 파일로 내려받기 → .dhsave, 파일에서 불러오기, 잘못된 파일
   const fpath='/tmp/sim-export.dhsave';
   await p.evaluate(()=>{ const o=URL.createObjectURL.bind(URL); URL.createObjectURL=(bl)=>{ window.__lastBlob=bl; return o(bl); }; HTMLAnchorElement.prototype.click=function(){ window.__lastName=this.download; }; });
   await p.click('#city-save'); await mi('파일로 내려받기'); const expName=await p.evaluate('window.__lastName'); assert.match(expName,/^donghyunsim-.*\.dhsave$/,'파일 이름 '+expName); const expText=await p.evaluate('window.__lastBlob.text()'); require('fs').writeFileSync(fpath,expText); const exp=JSON.parse(expText); assert.strictEqual(exp.format,'donghyunsim-save'); assert.strictEqual(exp.state.month,mSave); assert.match(await p.$eval('#status',e=>e.textContent),/내려받았다/);
   await p.evaluate(`${H}.step(5)`); await p.click('#city-load'); await mi('파일에서 불러오기'); await p.setInputFiles('#load-file',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('c.month'),mSave,'파일에서 불러오면 그 시점');
+  await p.click('.sim-speed button[data-speed="0"]');
   await p.evaluate(`${H}.step(2)`); require('fs').writeFileSync('/tmp/sim-bad.dhsave','{"hello":1}'); await p.setInputFiles('#load-file','/tmp/sim-bad.dhsave'); await p.waitForTimeout(200); assert.match(await p.$eval('#status',e=>e.textContent),/불러오기 실패: 동현심 저장 파일이 아니다/); assert.strictEqual(await G('c.month'),mSave+2);
   // 칸 지우기 메뉴
   await p.click('#city-save'); await mi('칸 지우기'); assert.match(await menuText(),/^칸 지우기/); await mi('브라우저 칸 2'); await mi('지운다'); assert.strictEqual(await p.evaluate(()=>localStorage.getItem('donghyunsim:slot2')),null,'칸 2 지움'); assert.match(await menuText(),/^칸 지우기/); await mi('돌아가기'); await mi('돌아가기'); assert.strictEqual(await menuText(),'');

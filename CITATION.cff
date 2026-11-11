@@ -2,9 +2,9 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata below."
 title: "Donghyunsim (동현심): a small city-building laboratory in the manner of SimCity DS, with the starting funds and the event/disaster switches set through the esoteric language Donghyun-lang"
 type: software
-version: "0.10"
+version: "0.11"
 doi: "10.5281/zenodo.24050245"
-date-released: "2026-11-09"
+date-released: "2026-11-11"
 authors:
   - family-names: Kim
     given-names: Dong Hyun
@@ -17,7 +17,7 @@ abstract: >-
   Donghyunsim is a browser-based, noncommercial city-building toy that
   follows only the skeleton of SimCity DS (Nintendo DS, 2007; developed by
   AKI Corporation and EA Japan, published by Electronic Arts), itself based
-  on SimCity 3000. On a single 40x40 plain crossed by a river the player
+  on SimCity 3000. On a 40x40 plain crossed by a river, expandable to 60x60, the player
   lays roads and power lines, places 3x3 residential, commercial and
   industrial zones, and builds a power plant, police and fire stations and
   parks. Zones that are both powered and reached by a road grow through five
@@ -30,8 +30,9 @@ abstract: >-
   programming language Donghyun-lang. Input is mouse and touch only, with
   fullscreen; keyboard and gamepad are intentionally unsupported. The city
   is saved in the browser and can be exported to and imported from a
-  .dhcity file. All 39 tiles and icons are drawn anew by tools/tiles.py and
-  the news faces are the 16x16 faces of the Donghyun series; no asset of the
+  .dhsave file. All 89 tiles and icons are drawn anew by tools/tiles.py and
+  tools/architecture.py; version 0.11 redraws all 30 zone stages and 18 facilities.
+  The news faces are the 16x16 faces of the Donghyun series; no asset of the
   original game is used. The MIT license applies to the Donghyunsim code and
   documentation; the page fonts are under the SIL Open Font License. See
   LICENSE and CREDITS.md.

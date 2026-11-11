@@ -310,6 +310,11 @@ g=blank(); rect(g,0,11,16,5,'7'); rect(g,2,8,12,3,'h'); rect(g,4,1,2,7,'Y'); rec
 g=blank(); blob(g,['  KK ',' KKKK','KK  K','K    '],9,2); rect(g,3,7,3,3,'a'); rect(g,2,9,6,6,'a'); rect(g,7,4,4,4,'a'); rect(g,9,2,3,3,'I'); rect(g,3,10,4,4,'A'); g=outline(g); add('ico_repair',g)   # 렌치
 g=blank(); rect(g,1,2,14,12,'g'); rect(g,1,2,14,1,'5'); rect(g,8,2,7,12,'G'); rect(g,8,2,1,12,'K'); blob(g,['Y Y Y','     ','Y Y Y'],9,5); rect(g,2,4,5,8,'6'); g=outline(g); add('ico_land',g)
 
+# 건축·지면의 최종 그림은 별도의 정수 픽셀 생성기로 통일한다.
+# 아이콘·불·연기 정의는 위에서 보존하고 건축 그림 48종은 새로 그린다.
+from architecture import repaint
+repaint(PAL, SPR)
+
 def write_js(path='src/tiles.js'):
     body=['/* 동현심 그림: tools/tiles.py가 글자 격자로 새로 그린 것이다. 원작 게임의 그림은 한 점도 쓰지 않는다. */','(function(root){',"'use strict';",
           'const PAL='+json.dumps(PAL,ensure_ascii=False)+';','const SPR={']

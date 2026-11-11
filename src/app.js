@@ -196,7 +196,7 @@ function layout(){
 new ResizeObserver(()=>layout()).observe(mainEl); addEventListener('orientationchange',()=>setTimeout(layout,80));
 
 /* ---------- 그리기 ---------- */
-const ROAD='#5a5852', CURB='#b9b6a8', DECK='#8c7a63', RAIL='#6b4a2e', WIRE='#4a3a2a', POLE='#8d919c';
+const ROAD='#627273', CURB='#d4cfb9', DECK='#9d8b77', RAIL='#705e56', WIRE='#4a3a2a', POLE='#8d919c';
 const ZONE_COL={R:'#4caf50',RH:'#2f8f4e',C:'#2f62c8',CD:'#5a3fb8',I:'#e0952a',IH:'#9a5a1e'}, ZONE_CH={R:'주',RH:'고',C:'상',CD:'백',I:'공',IH:'중'};
 let ghost=null; // {x,y,big,ok} 또는 {x,y,big:false}
 let pendingPaint=false; // 손가락으로 길·전선·공원·철거를 누른 뒤 아직 놓지 않은 상태
@@ -210,7 +210,7 @@ function drawRoad(x,y,px,py,ts){ const c=city.cell(x,y); const L=isRoad(x-1,y),R
     if(L||R){ g.fillRect(px,py,ts,r); g.fillRect(px,py+ts-r,ts,r); } if(U||D){ g.fillRect(px,py,r,ts); g.fillRect(px+ts-r,py,r,ts); } if(!(L||R||U||D)){ g.fillRect(px,py,ts,r); g.fillRect(px,py+ts-r,ts,r); } return; }
   g.fillStyle=ROAD; g.fillRect(px,py,ts,ts); g.fillStyle=CURB; const k=Math.max(1,ts/9);
   if(!L) g.fillRect(px,py,k,ts); if(!R) g.fillRect(px+ts-k,py,k,ts); if(!U) g.fillRect(px,py,ts,k); if(!D) g.fillRect(px,py+ts-k,ts,k);
-  g.fillStyle='#f2b705'; const d=Math.max(1,ts/10);
+  g.fillStyle='#dab66d'; const d=Math.max(1,ts/10);
   if(L&&R&&!U&&!D){ g.fillRect(px+ts*0.1,py+ts/2-d/2,ts*0.3,d); g.fillRect(px+ts*0.6,py+ts/2-d/2,ts*0.3,d); }
   else if(U&&D&&!L&&!R){ g.fillRect(px+ts/2-d/2,py+ts*0.1,d,ts*0.3); g.fillRect(px+ts/2-d/2,py+ts*0.6,d,ts*0.3); } }
 function drawWire(x,y,px,py,ts){ const c=city.cell(x,y); const n=[[1,0],[-1,0],[0,1],[0,-1]].filter(([dx,dy])=>conducts(x+dx,y+dy)); const lw=Math.max(1,ts/8), cx=px+ts/2, cy=py+ts/2;
@@ -218,6 +218,19 @@ function drawWire(x,y,px,py,ts){ const c=city.cell(x,y); const n=[[1,0],[-1,0],[
   g.fillStyle=c.t===T.WATER?'#e8e1d3':POLE; g.fillRect(cx-lw,cy-lw,lw*2,lw*2); }
 function drawBolt(cx,cy,s){ g.fillStyle='#f2b705'; g.strokeStyle='#2e2a38'; g.lineWidth=Math.max(1,s/10); g.beginPath(); g.moveTo(cx+s*0.1,cy-s*0.5); g.lineTo(cx-s*0.3,cy+s*0.08); g.lineTo(cx,cy+s*0.08); g.lineTo(cx-s*0.1,cy+s*0.5); g.lineTo(cx+s*0.3,cy-s*0.08); g.lineTo(cx,cy-s*0.08); g.closePath(); g.fill(); g.stroke(); }
 function drawNoRoad(cx,cy,s){ g.fillStyle='#e8e1d3'; g.strokeStyle='#2e2a38'; g.lineWidth=Math.max(1,s/10); g.beginPath(); g.arc(cx,cy,s*0.45,0,Math.PI*2); g.fill(); g.stroke(); g.fillStyle=ROAD; g.fillRect(cx-s*0.3,cy-s*0.12,s*0.6,s*0.24); g.fillStyle='#f2b705'; g.fillRect(cx-s*0.08,cy-s*0.03,s*0.16,s*0.06); }
+// 건축 그림의 굴뚝 중심(48×48 원본 좌표). 규칙이 아닌 연기 표시 위치다.
+const STACKS={I1:[[32,10]],I2:[[34,6]],I3:[[10,4],[35,8]],I4:[[11,3],[32,3]],I5:[[11,3],[32,3]],
+  IH1:[[32,10]],IH2:[[34,6]],IH3:[[10,4],[35,8]],IH4:[[10,3],[21,3],[35,3]],IH5:[[10,3],[21,3],[35,3]],
+  power:[[11,3],[32,2]],nuclear:[[10,8],[35,8]]};
+function drawSmoke(key,px,py,ts,alpha,period){
+  const sm=spr(Math.floor(now/600)%2?'smoke1':'smoke0'), unit=ts/16;
+  g.globalAlpha=alpha;
+  for(const [i,p] of (STACKS[key]||[]).entries()){
+    const rise=((now/period+i*0.4)%1)*5;
+    g.drawImage(sm,px+(p[0]-6)*unit,py+(p[1]-11-rise)*unit,12*unit,12*unit);
+  }
+  g.globalAlpha=1;
+}
 function draw(){
   if(!city){ g.setTransform(1,0,0,1,0,0); g.fillStyle='#5c9e45'; g.fillRect(0,0,board.width,board.height); return; }
   const W=city.W, H=city.H;
@@ -229,7 +242,13 @@ function draw(){
   g.save(); g.beginPath(); g.rect(px0(0),py0(0),W*ts,H*ts); g.clip();
   // 땅
   for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++){ const c=city.grid[y][x], px=px0(x), py=py0(y);
-    if(c.t===T.WATER) g.drawImage(spr(((x+y+anim)%2)?'water1':'water0'),px,py,ts,ts);
+    if(c.t===T.WATER){ g.drawImage(spr(((x+y+anim)%2)?'water1':'water0'),px,py,ts,ts);
+      // 밝은 강둑 한 줄과 얕은 물: 강 모양·건설 가능한 칸은 바꾸지 않는다.
+      const edge=(xx,yy)=>{const n=city.cell(xx,yy);return n&&n.t!==T.WATER&&!n.bridge;}, e=Math.max(1,ts/16);
+      g.fillStyle='#96b9be';
+      if(edge(x-1,y))g.fillRect(px,py,e,ts);if(edge(x+1,y))g.fillRect(px+ts-e,py,e,ts);
+      if(edge(x,y-1))g.fillRect(px,py,ts,e);if(edge(x,y+1))g.fillRect(px,py+ts-e,ts,e);
+    }
     else g.drawImage(spr(((x*7+y*13)%5===0)?'grass1':'grass0'),px,py,ts,ts);
     if(c.t===T.TREE) g.drawImage(spr('tree'),px,py,ts,ts); else if(c.t===T.PARK){ g.drawImage(spr('park'),px,py,ts,ts); if(ts>=12&&((x*5+y*3+Math.floor(now/700))%9===0)){ g.fillStyle='rgba(255,255,255,.85)'; g.fillRect(px+ts*0.6,py+ts*0.25,Math.max(1,ts/8),Math.max(1,ts/8)); } }
     else if(c.t===T.RUBBLE) g.drawImage(spr('rubble'),px,py,ts,ts);
@@ -245,12 +264,12 @@ function draw(){
       if(city.month-z.grow<2){ // 공사 중: 비계와 크레인 팔
         g.fillStyle='rgba(242,183,5,.22)'; g.fillRect(px,py,s3,s3); g.strokeStyle='#f2b705'; g.lineWidth=Math.max(1,ts/10); g.setLineDash([ts/3,ts/3]); g.strokeRect(px+ts*0.2,py+ts*0.2,s3-ts*0.4,s3-ts*0.4); g.setLineDash([]);
         g.strokeStyle='#2e2a38'; g.beginPath(); g.moveTo(px+s3*0.75,py+s3*0.95); g.lineTo(px+s3*0.75,py+ts*0.1); g.lineTo(px+s3*0.2+anim*ts*0.3,py+ts*0.1); g.stroke(); }
-      if(BASE[z.kind]==='I'&&z.pow&&ts>=8){ const sm=spr(anim?'smoke1':'smoke0'); g.globalAlpha=z.kind==='IH'?0.85:0.55; const k=z.kind==='IH'?2:1; for(let i=0;i<k;i++) g.drawImage(sm,px+ts*(0.4+i*1.2),py-ts*0.5-((now/450+i*0.4)%1)*ts*0.35,ts*0.9,ts*0.9); g.globalAlpha=1; } }
+      if(BASE[z.kind]==='I'&&z.pow&&ts>=8) drawSmoke(z.kind+z.lv,px,py,ts,z.kind==='IH'?0.75:0.5,450); }
     else { g.fillStyle=ZONE_COL[z.kind]; g.globalAlpha=0.18; g.fillRect(px,py,s3,s3); g.globalAlpha=1; g.strokeStyle=ZONE_COL[z.kind]; g.lineWidth=Math.max(1,ts/6); g.setLineDash([ts/2,ts/3]); g.strokeRect(px+ts*0.15,py+ts*0.15,s3-ts*0.3,s3-ts*0.3); g.setLineDash([]);
       g.fillStyle='rgba(255,255,255,.85)'; g.font=`700 ${Math.max(8,ts*1.1)}px ${font}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(ZONE_CH[z.kind],px+s3/2,py+s3/2); } }
   for(const b of city.builds){ if(!b||!vis(b.x,b.y,b.s)) continue; const px=px0(b.x), py=py0(b.y), n=b.s, sn=ts*n; g.drawImage(spr(b.kind),px,py,sn,sn);
-    if(b.kind==='power'&&b.pow!==false){ const sm=spr(anim?'smoke1':'smoke0'); g.globalAlpha=0.8; g.drawImage(sm,px+ts*0.55,py-ts*0.45-(now/400%1)*ts*0.3,ts*0.9,ts*0.9); g.globalAlpha=1; }
-    if(b.kind==='nuclear'){ g.globalAlpha=0.45; g.drawImage(spr(anim?'smoke1':'smoke0'),px+ts*1.9,py-ts*0.4-(now/700%1)*ts*0.3,ts,ts); g.globalAlpha=1; }
+    if(b.kind==='power'&&b.pow!==false) drawSmoke('power',px,py,ts,0.7,400);
+    if(b.kind==='nuclear') drawSmoke('nuclear',px,py,ts,0.4,700);
     if(b.kind==='wind'&&ts>=8){ const cx=px+ts/2, cy=py+ts*0.3, r=ts*0.42, a=now/300; g.strokeStyle='#f6ecd6'; g.lineWidth=Math.max(1,ts/9); g.beginPath(); for(let i=0;i<3;i++){ g.moveTo(cx,cy); g.lineTo(cx+Math.cos(a+i*2.094)*r,cy+Math.sin(a+i*2.094)*r); } g.stroke(); }
     if(b.worn&&blink){ const r=Math.max(5,ts*0.7); g.fillStyle='#f2b705'; g.strokeStyle='#2e2a38'; g.lineWidth=Math.max(1,ts/10); g.beginPath(); g.arc(px+sn-r*0.7,py+r*0.7,r*0.6,0,Math.PI*2); g.fill(); g.stroke(); g.fillStyle='#2e2a38'; g.font=`900 ${Math.round(r*0.9)}px ${font}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText('!',px+sn-r*0.7,py+r*0.72); }
     if(b.kind==='cityhall'&&city.hall&&city.hall.lv>1&&ts>=8){ g.fillStyle='#f2b705'; g.font=`700 ${Math.round(ts*0.9)}px ${font}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText('★'.repeat(city.hall.lv-1),px+sn/2,py+sn-ts*0.5); } }

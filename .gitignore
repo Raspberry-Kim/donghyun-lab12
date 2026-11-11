@@ -3,3 +3,4 @@ dist/
 qa/*.png
 *.png.tmp
 tools/__pycache__/
+qa/design-output/
