@@ -77,13 +77,15 @@ const H='window.__donghyunsim';
   await p.click('#city-load'); await mi('브라우저 칸 1'); await mi('불러온다'); assert.strictEqual(await G('c.month'),mSave,'칸 1의 시점'); assert.strictEqual(await G('JSON.stringify([c.funds,c.month,c.zones.filter(Boolean).length])'),saved); assert.strictEqual(await G('S.settings.fundsOpt'),0,'저장된 설정(넉넉)'); assert.strictEqual(await p.$eval('#set-card',e=>e.textContent.includes('넉넉')),true);
   // 불러오기는 정상적으로 시간이 다시 흐른다. 정확한 스냅샷 비교 전 실제 멈춤 단추를 누른다.
   await p.click('.sim-speed button[data-speed="0"]');
+  const exportMonth=await G('c.month'); // 불러오기→멈춤 클릭 사이 정상 경과 시간과 파일 무결성을 분리한다.
   // 파일로 내려받기 → .dhsave, 파일에서 불러오기, 잘못된 파일
   const fpath='/tmp/sim-export.dhsave';
   await p.evaluate(()=>{ const o=URL.createObjectURL.bind(URL); URL.createObjectURL=(bl)=>{ window.__lastBlob=bl; return o(bl); }; HTMLAnchorElement.prototype.click=function(){ window.__lastName=this.download; }; });
-  await p.click('#city-save'); await mi('파일로 내려받기'); const expName=await p.evaluate('window.__lastName'); assert.match(expName,/^donghyunsim-.*\.dhsave$/,'파일 이름 '+expName); const expText=await p.evaluate('window.__lastBlob.text()'); require('fs').writeFileSync(fpath,expText); const exp=JSON.parse(expText); assert.strictEqual(exp.format,'donghyunsim-save'); assert.strictEqual(exp.state.month,mSave); assert.match(await p.$eval('#status',e=>e.textContent),/내려받았다/);
-  await p.evaluate(`${H}.step(5)`); await p.click('#city-load'); await mi('파일에서 불러오기'); await p.setInputFiles('#load-file',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('c.month'),mSave,'파일에서 불러오면 그 시점');
+  await p.click('#city-save'); await mi('파일로 내려받기'); const expName=await p.evaluate('window.__lastName'); assert.match(expName,/^donghyunsim-.*\.dhsave$/,'파일 이름 '+expName); const expText=await p.evaluate('window.__lastBlob.text()'); require('fs').writeFileSync(fpath,expText); const exp=JSON.parse(expText); assert.strictEqual(exp.format,'donghyunsim-save'); assert.strictEqual(exp.state.month,exportMonth); assert.match(await p.$eval('#status',e=>e.textContent),/내려받았다/);
+  await p.evaluate(`${H}.step(5)`); await p.click('#city-load'); await mi('파일에서 불러오기'); await p.setInputFiles('#load-file',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('c.month'),exportMonth,'파일에서 불러오면 그 시점');
   await p.click('.sim-speed button[data-speed="0"]');
-  await p.evaluate(`${H}.step(2)`); require('fs').writeFileSync('/tmp/sim-bad.dhsave','{"hello":1}'); await p.setInputFiles('#load-file','/tmp/sim-bad.dhsave'); await p.waitForTimeout(200); assert.match(await p.$eval('#status',e=>e.textContent),/불러오기 실패: 동현심 저장 파일이 아니다/); assert.strictEqual(await G('c.month'),mSave+2);
+  const afterImportMonth=await G('c.month');
+  await p.evaluate(`${H}.step(2)`); require('fs').writeFileSync('/tmp/sim-bad.dhsave','{"hello":1}'); await p.setInputFiles('#load-file','/tmp/sim-bad.dhsave'); await p.waitForTimeout(200); assert.match(await p.$eval('#status',e=>e.textContent),/불러오기 실패: 동현심 저장 파일이 아니다/); assert.strictEqual(await G('c.month'),afterImportMonth+2);
   // 칸 지우기 메뉴
   await p.click('#city-save'); await mi('칸 지우기'); assert.match(await menuText(),/^칸 지우기/); await mi('브라우저 칸 2'); await mi('지운다'); assert.strictEqual(await p.evaluate(()=>localStorage.getItem('donghyunsim:slot2')),null,'칸 2 지움'); assert.match(await menuText(),/^칸 지우기/); await mi('돌아가기'); await mi('돌아가기'); assert.strictEqual(await menuText(),'');
   ok('저장 메뉴 · 덮어쓰기 확인 · 불러오기 확인·취소 · .dhsave 내려받기·열기 · 잘못된 파일 · 칸 지우기 · 메뉴 동안 멎음');
@@ -106,8 +108,8 @@ const H='window.__donghyunsim';
   assert.strictEqual(await G('S.paused'),true); assert.deepStrictEqual(await p.evaluate(()=>[1,2,3].map(n=>!!localStorage.getItem('donghyunsim:slot'+n))),[false,false,false],'숨길 때 저절로 저장하지 않는다'); const m2=await G('c.month'); await p.waitForTimeout(1200); assert.strictEqual(await G('c.month'),m2);
   await p.evaluate(()=>{ Object.defineProperty(document,'hidden',{get:()=>false,configurable:true}); document.dispatchEvent(new Event('visibilitychange')); }); assert.strictEqual(await G('S.paused'),false); ok('숨기면 멎는다');
   // 14) 시리즈 띠: 13개 · 한 줄(1280)
-  assert.strictEqual(await p.$eval('.series-links',e=>e.children.length),18); const bh=await p.$eval('.series-links',e=>e.getBoundingClientRect().height); assert.ok(bh>70&&bh<160,'두 줄 '+bh);
-  assert.strictEqual(await p.$eval('.series-item.is-current .series-name',e=>e.textContent.replace('™','')),'동현심'); ok('시리즈 띠 18 · 두 줄');
+  assert.strictEqual(await p.$eval('.series-links',e=>e.children.length),19); const bh=await p.$eval('.series-links',e=>e.getBoundingClientRect().height); assert.ok(bh>70&&bh<160,'두 줄 '+bh);
+  assert.strictEqual(await p.$eval('.series-item.is-current .series-name',e=>e.textContent.replace('™','')),'동현심'); ok('시리즈 띠 19 · 두 줄');
   await p.evaluate(()=>localStorage.clear());
   // 15) 휴대폰: 터치만으로 시작·도구·길 끌기·3×3 놓기·두 손가락 옮기기, 그리고 전체 화면
   const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true}); const m=await ctx.newPage();
@@ -132,7 +134,7 @@ const H='window.__donghyunsim';
   const cx1=await MG('S.cam.x'); await touch([{type:'start',pts:[{id:1,x:mid.x-30,y:mid.y}]},{type:'start',pts:[{id:2,x:mid.x+30,y:mid.y}]},{type:'move',pts:[{id:1,x:mid.x-90,y:mid.y},{id:2,x:mid.x-30,y:mid.y}]},{type:'end',pts:[{id:1,x:mid.x-90,y:mid.y},{id:2,x:mid.x-30,y:mid.y}]}]);
   assert.ok((await MG('S.cam.x'))>cx1,'두 손가락으로 옮김');
   await m.tap('#full'); await m.waitForTimeout(500); assert.ok(await MG('S.isFull()')); assert.ok((await m.$eval('#board',e=>e.getBoundingClientRect().width))>=360); await m.tap('#exit-full'); await m.waitForTimeout(300); assert.ok(!(await MG('S.isFull()')));
-  assert.strictEqual(await m.$eval('.series-links',e=>e.children.length),18); assert.notStrictEqual(await m.$eval('.series-item[data-series="lang"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','짝수면 동현랭도 반 폭'); assert.notStrictEqual(await m.$eval('.series-item[data-series="zooo"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','13개(홀수)면 동현랭만 크다');
+  assert.strictEqual(await m.$eval('.series-links',e=>e.children.length),19); assert.strictEqual(await m.$eval('.series-item[data-series="lang"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','홀수면 동현랭 두 칸 폭'); assert.notStrictEqual(await m.$eval('.series-item[data-series="zooo"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','19개(홀수)면 동현랭만 크다');
   ok('휴대폰: 터치 시작·발전소·길 끌기·두 손가락·전체 화면·띠');
   await ctx.close(); await b.close();
   if(errs.length){ console.error('콘솔 오류',errs); process.exit(1); }

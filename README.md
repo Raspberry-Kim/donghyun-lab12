@@ -1,4 +1,4 @@
-# 동현심 v0.12
+# 동현심 v0.13
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24050245.svg)](https://doi.org/10.5281/zenodo.24050245)
 
@@ -107,3 +107,7 @@ Nintendo DS판 「SimCity DS」(2007, 개발 AKI Corporation·EA Japan, 발매 E
 ## 만든 사람
 
 인하대학교 의과대학 김동현 교수는 백신학·감염학을 연구한다. 명랑하고 따뜻한 개발을 지향한다.
+
+## 시리즈 연결
+
+[동현랭](https://raspberry-kim.github.io/donghyun-lang/)과 열여덟 실험실을 상단 메뉴로 오간다. [동현테](https://raspberry-kim.github.io/donghyun-lab18/)는 고정 시점의 1인용 단식 테니스다. 데스크톱 메뉴는 동현랭이 두 줄 높이, 나머지는 9열×2줄이다. 모바일은 두 열이며 홀수 개일 때 동현랭만 두 칸 너비를 쓴다.

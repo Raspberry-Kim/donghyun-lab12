@@ -289,15 +289,16 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
 /* 저장·불러오기: 동현전·동현워·동현몬과 같은 칸 목록과 메뉴 */
 .menu-back{position:absolute;inset:0;z-index:5;pointer-events:none}
 .menu-back:has(.game-menu:not([hidden])){pointer-events:auto}
-.game-menu{position:absolute;min-width:150px;background:var(--paper);border:2px solid var(--ink);border-radius:8px;box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:6px;line-height:1.4;z-index:6;max-height:92%;overflow:auto;text-align:left}
+.game-menu{position:absolute;min-width:150px;background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:8px;box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:6px;line-height:1.4;z-index:6;max-height:92%;overflow:auto;text-align:left}
 .game-menu[hidden]{display:none}
 .game-menu h4{margin:2px 6px 6px;font:700 var(--text-xs) var(--body);color:var(--muted);white-space:normal;line-height:1.5}
 .game-menu .mi{display:flex;justify-content:space-between;gap:14px;padding:10px 10px;border-radius:5px;font-size:var(--text-sm);cursor:pointer;white-space:nowrap;min-height:44px;align-items:center}
 .game-menu .mi:hover{background:var(--surface2)}
 .game-menu .mi:active{background:var(--accent);color:#26211c;font-weight:700}
-.game-menu .mi.off{opacity:.45;cursor:default}
-.game-menu .mi.off:hover{background:none}
+.game-menu .mi.off{opacity:1;cursor:not-allowed;color:var(--muted);background:var(--surface2)}
+.game-menu .mi.off:hover,.game-menu .mi.off:active{background:var(--surface2);color:var(--muted);font-weight:400}
 .game-menu .mi small{font-family:var(--mono);color:inherit;opacity:.8;white-space:normal;text-align:right}
+.game-menu .mi.off small{opacity:1}
 .game-menu.center{left:50%;top:50%;transform:translate(-50%,-50%);min-width:240px;max-width:92%}
 .game-menu,.menu-back{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .load-box{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
@@ -334,3 +335,16 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
 .lang-rule td{color:var(--muted);word-break:keep-all}
 .lang-rule td:first-child,.lang-rule td:nth-child(2){color:var(--ink);font-weight:700;white-space:nowrap}
 .lang-rule td:last-child{white-space:nowrap}
+
+
+/* SERIES-19: 데스크톱은 동현랭 두 줄 높이 + 18실험실 9열×2줄. 모바일은 기존 홀수 규칙. */
+@media(min-width:781px){
+ .series-strip .series-links:has(.series-item:nth-child(19):last-child){grid-template-columns:repeat(10,minmax(0,1fr));grid-template-rows:repeat(2,1fr);grid-auto-flow:row;min-width:0}
+ .series-strip .series-links:has(.series-item:nth-child(19):last-child) .series-item[data-series="lang"]{grid-column:auto;grid-row:span 2;align-items:center;text-align:center}
+ .series-strip .series-links:has(.series-item:nth-child(19):last-child) .series-item[data-series="lang"] .series-name{font-size:19px}
+ .series-strip .series-links:has(.series-item:nth-child(19):last-child) .series-note{white-space:normal}
+}
+@media(max-width:780px){
+ .series-strip .series-links:has(.series-item:nth-child(19):last-child){grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none}
+ .series-strip .series-links:has(.series-item:nth-child(19):last-child) .series-item[data-series="lang"]{grid-column:span 2;grid-row:auto}
+}
