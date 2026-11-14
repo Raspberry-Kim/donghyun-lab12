@@ -1,5 +1,5 @@
 // 동현심 무작위 시험: node qa/fuzz-play.cjs [판 수]
-// 여러 씨앗으로 무작위로 놓고 부수며 수백 년을 돌려, 멈추거나 값이 깨지지 않는지(NaN·음수 단계·격자와 구역 목록의 어긋남) 본다. 저장·복원도 중간에 섞는다.
+// 여러 시드로 무작위로 놓고 부수며 수백 년을 돌려, 멈추거나 값이 깨지지 않는지(NaN·음수 단계·격자와 구역 목록의 어긋남) 본다. 저장·복원도 중간에 섞는다.
 const assert=require('assert');
 const {City,T,KINDS,MAX_LV,BUILD_NAME,sizeOf}=require('../src/engine.js').Sim;
 const BKINDS=Object.keys(BUILD_NAME);
@@ -31,11 +31,11 @@ for(let s=1;s<=N;s++){
       totalActs++; if(res.ok) okActs++; assert.ok(typeof res.ok==='boolean'); if(!res.ok) assert.ok(res.why,'이유 없음'); }
     if(r()<0.02) c.funds+=500000; // 가끔 돈을 넣어 많이 짓게 한다
     c.tick(); totalMonths++; c.takeMsgs();
-    if(m%97===0) check(c,`씨앗 ${s} ${m}달`);
-    if(r()<0.01){ const snap=JSON.parse(JSON.stringify(c.snapshot())); const d=City.restore(snap); check(d,`씨앗 ${s} 복원`); assert.strictEqual(d.funds,c.funds); assert.strictEqual(d.month,c.month); assert.strictEqual(d.W,c.W); assert.strictEqual(d.tax,c.tax); c=d; }
+    if(m%97===0) check(c,`시드 ${s} ${m}달`);
+    if(r()<0.01){ const snap=JSON.parse(JSON.stringify(c.snapshot())); const d=City.restore(snap); check(d,`시드 ${s} 복원`); assert.strictEqual(d.funds,c.funds); assert.strictEqual(d.month,c.month); assert.strictEqual(d.W,c.W); assert.strictEqual(d.tax,c.tax); c=d; }
     for(let y=0;y<c.H;y++) for(let x=0;x<c.W;x++) c.describe(x,y); // 설명이 던지지 않는다
   }
-  check(c,`씨앗 ${s} 끝`);
-  process.stdout.write(`씨앗 ${s}: ${years}년 · ${c.W}×${c.H} · 인구 ${c.pop} · ${c.title} · 자금 ${Math.round(c.funds)} · 구역 ${c.zones.filter(Boolean).length} · 소식 ${c.log.length}\n`);
+  check(c,`시드 ${s} 끝`);
+  process.stdout.write(`시드 ${s}: ${years}년 · ${c.W}×${c.H} · 인구 ${c.pop} · ${c.title} · 자금 ${Math.round(c.funds)} · 구역 ${c.zones.filter(Boolean).length} · 소식 ${c.log.length}\n`);
 }
 console.log(`\n${N}판 · ${totalMonths}달 · 행동 ${totalActs}(성공 ${okActs}) · ${((Date.now()-t0)/1000).toFixed(1)}초 · 이상 없음`);
