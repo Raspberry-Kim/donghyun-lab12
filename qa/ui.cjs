@@ -1,5 +1,5 @@
 // 화면 시험: node qa/ui.cjs (index.html을 파일로 연다 · build 뒤에 돌린다)
-// 첫 화면·규약 오류·도구 누르기·마우스 끌기·3×3 유령 놓기·바퀴 확대·가운데 단추 끌기·정보·보기·속도·멎음·저장 메뉴와 칸 3개·.dhsave·첫 화면 칸 목록·전체 화면·휴대폰 터치·두 손가락·키보드 무시·시리즈 띠·콘솔 오류를 본다
+// 첫 화면·규약 오류·도구 누르기·마우스 끌기·3×3 유령 놓기·바퀴 확대·가운데 버튼 끌기·정보·보기·속도·멎음·저장 메뉴와 칸 3개·.dhsave·첫 화면 칸 목록·전체 화면·휴대폰 터치·두 손가락·키보드 무시·시리즈 띠·콘솔 오류를 본다
 const {chromium}=require('/home/user/node_modules/playwright'); const path=require('path'); const assert=require('assert');
 const GROUP_OF=id=>['pan','info','road','wire','park','bull','repair','land'].includes(id)?0:['R','RH','C','CD','I','IH'].includes(id)?1:['power','hydro','wind','nuclear','solar','fusion'].includes(id)?2:['tower','stadium','airport','harbor'].includes(id)?4:3;
 async function tool(pg,id,tap){ const gsel=`#toolgroups button[data-group="${GROUP_OF(id)}"]`, tsel=`#tools button[data-tool="${id}"]`; if(tap){ await pg.tap(gsel); await pg.tap(tsel); } else { await pg.click(gsel); await pg.click(tsel); } }
@@ -25,10 +25,10 @@ const H='window.__donghyunsim';
   await p.fill('#code','나는 동현이냐?\n뿡뿡 도오오오옹~뿡뿡뿡~뿡뿡 도옹~뿡뿡뿡~뿡뿡 도옹~뿡뿡뿡\n동현이구나'); await p.click('#run'); assert.match(await p.$eval('#result',e=>e.textContent),/자금 옵션 4/); assert.strictEqual(await G('S.ready'),true); ok('규약 오류: 개수·범위');
   // 2) 예제 02 로 시작 → 50,000냥, 바로 달이 흐른다
   await p.selectOption('#example','rich'); await p.click('#run'); assert.strictEqual(await G('S.ready'),false); assert.strictEqual(await G('c.funds'),500000); assert.strictEqual(await p.$eval('#funds',e=>e.textContent),'500,000');
-  await p.waitForTimeout(1300); assert.ok((await G('c.month'))>=1,'달이 흐른다'); await p.click('.sim-speed button[data-speed="0"]'); const m0=await G('c.month'); await p.waitForTimeout(1200); assert.strictEqual(await G('c.month'),m0,'멈춤'); ok('예제 02: 500,000냥 · 달 흐름 · 멈춤 단추');
+  await p.waitForTimeout(1300); assert.ok((await G('c.month'))>=1,'달이 흐른다'); await p.click('.sim-speed button[data-speed="0"]'); const m0=await G('c.month'); await p.waitForTimeout(1200); assert.strictEqual(await G('c.month'),m0,'멈춤'); ok('예제 02: 500,000냥 · 달 흐름 · 멈춤 버튼');
   await p.selectOption('#example','sandbox'); await p.click('#run'); assert.strictEqual(await G('c.funds'),1000000); assert.deepStrictEqual(await G('[c.events,c.disasters]'),[false,false]); assert.strictEqual(await p.$eval('#set-card',e=>e.textContent.includes('아주 넉넉하게 1,000,000냥')),true); await p.selectOption('#example','rich'); await p.click('#run'); assert.strictEqual(await G('c.funds'),500000); await p.click('.sim-speed button[data-speed="0"]'); ok('예제 06: 1,000,000냥 · 이벤트·재해 끔');
   await p.evaluate(()=>document.querySelector('#stage').scrollIntoView({block:'center'}));
-  // 3) 도구 단추 → 도구 바뀜. 발전소 3×3: 누른 채 옮기다 떼면 놓인다(유령 초록)
+  // 3) 도구 버튼 → 도구 바뀜. 발전소 3×3: 누른 채 옮기다 떼면 놓인다(유령 초록)
   await tool(p,'power'); assert.strictEqual(await G('S.tool'),'power'); assert.ok(await p.$eval('#tools button[data-tool="power"]',e=>e.classList.contains('on')));
   let a=await cellXY(3,3); await p.mouse.move(a.x,a.y); await p.mouse.down(); let gh=await G('S.ghost'); assert.ok(gh&&gh.big&&gh.ok&&gh.x===2&&gh.y===2,'유령 '+JSON.stringify(gh));
   a=await cellXY(5,5); await p.mouse.move(a.x,a.y); await p.mouse.up(); assert.strictEqual(await G('c.builds.filter(Boolean).length'),1); assert.deepStrictEqual(await G('[c.builds[0].x,c.builds[0].y]'),[4,4],'떼는 자리에 놓임'); assert.strictEqual(await G('c.funds'),497000); ok('발전소: 유령 따라가다 떼면 3×3 놓임 · −3,000');
@@ -45,10 +45,10 @@ const H='window.__donghyunsim';
   // 6) 철거: 끌면 길이 사라진다. 정보: 칸 설명이 뜬다
   await tool(p,'bull'); a=await cellXY(13,9); const b2=await cellXY(14,9); await p.mouse.move(a.x,a.y); await p.mouse.down(); await p.mouse.move(b2.x,b2.y,{steps:2}); await p.mouse.up(); assert.strictEqual((await cellAt(13,9)).t,0); assert.strictEqual((await cellAt(14,9)).t,0);
   await tool(p,'info'); a=await cellXY(5,11); await p.mouse.click(a.x,a.y); assert.ok(!(await p.$eval('#info',e=>e.hidden))); assert.match(await p.$eval('#info',e=>e.textContent),/주거 구역/); ok('철거 끌기 · 정보 풍선');
-  // 7) 바퀴 확대·가운데 단추 끌기·+·−·⤢
+  // 7) 바퀴 확대·가운데 버튼 끌기·+·−·⤢
   const z0=await G('S.cam.zoom'); a=await cellXY(10,10); await p.mouse.move(a.x,a.y); await p.mouse.wheel(0,-600); assert.ok((await G('S.cam.zoom'))>z0,'바퀴로 확대');
-  const cx0=await G('S.cam.x'); await p.mouse.move(a.x,a.y); await p.mouse.down({button:'middle'}); await p.mouse.move(a.x-120,a.y,{steps:3}); await p.mouse.up({button:'middle'}); assert.ok((await G('S.cam.x'))>cx0,'가운데 단추로 옮김');
-  await p.click('#zoom-fit'); assert.ok(Math.abs((await G('S.cam.zoom'))-z0)<1e-6,'전체 보기'); await p.click('#zoom-in'); assert.ok((await G('S.cam.zoom'))>z0); await p.click('#zoom-out'); ok('확대·축소·옮기기: 바퀴 · 가운데 단추 · 단추');
+  const cx0=await G('S.cam.x'); await p.mouse.move(a.x,a.y); await p.mouse.down({button:'middle'}); await p.mouse.move(a.x-120,a.y,{steps:3}); await p.mouse.up({button:'middle'}); assert.ok((await G('S.cam.x'))>cx0,'가운데 버튼으로 옮김');
+  await p.click('#zoom-fit'); assert.ok(Math.abs((await G('S.cam.zoom'))-z0)<1e-6,'전체 보기'); await p.click('#zoom-in'); assert.ok((await G('S.cam.zoom'))>z0); await p.click('#zoom-out'); ok('확대·축소·옮기기: 바퀴 · 가운데 버튼 · 버튼');
   // 8) 이동 도구로 끌어도 아무것도 놓이지 않는다
   await p.click('#zoom-in'); await tool(p,'pan'); const zn=await G('c.zones.filter(Boolean).length'), rn=await G('c.grid.flat().filter(k=>k.t===3).length'); a=await cellXY(12,12); await p.mouse.move(a.x,a.y); await p.mouse.down(); await p.mouse.move(a.x-80,a.y-60,{steps:3}); await p.mouse.up();
   assert.strictEqual(await G('c.zones.filter(Boolean).length'),zn); assert.strictEqual(await G('c.grid.flat().filter(k=>k.t===3).length'),rn); await p.click('#zoom-fit'); ok('이동 도구: 끌어도 놓이지 않음');
@@ -75,7 +75,7 @@ const H='window.__donghyunsim';
   await p.click('#city-load'); assert.match(await menuText(),/^불러오기/); await p.click('.game-menu .mi.off'); assert.match(await menuText(),/^불러오기/,'빈 칸 3은 눌리지 않는다');
   await mi('브라우저 칸 1'); assert.match(await menuText(),/지금 도시를 두고 불러올까/); await mi('그만둔다'); await mi('돌아가기'); assert.strictEqual(await G('c.month'),mSave+3,'취소하면 그대로');
   await p.click('#city-load'); await mi('브라우저 칸 1'); await mi('불러온다'); assert.strictEqual(await G('c.month'),mSave,'칸 1의 시점'); assert.strictEqual(await G('JSON.stringify([c.funds,c.month,c.zones.filter(Boolean).length])'),saved); assert.strictEqual(await G('S.settings.fundsOpt'),0,'저장된 설정(넉넉)'); assert.strictEqual(await p.$eval('#set-card',e=>e.textContent.includes('넉넉')),true);
-  // 불러오기는 정상적으로 시간이 다시 흐른다. 정확한 스냅샷 비교 전 실제 멈춤 단추를 누른다.
+  // 불러오기는 정상적으로 시간이 다시 흐른다. 정확한 스냅샷 비교 전 실제 멈춤 버튼을 누른다.
   await p.click('.sim-speed button[data-speed="0"]');
   const exportMonth=await G('c.month'); // 불러오기→멈춤 클릭 사이 정상 경과 시간과 파일 무결성을 분리한다.
   // 파일로 내려받기 → .dhsave, 파일에서 불러오기, 잘못된 파일
@@ -100,7 +100,7 @@ const H='window.__donghyunsim';
   await p.reload(); await p.waitForTimeout(400); await p.evaluate(()=>document.querySelector('#load-box').scrollIntoView({block:'center'})); await p.click('.slot-del'); await p.click('.slot-del'); assert.strictEqual(await p.evaluate(()=>localStorage.getItem('donghyunsim:slot1')),null,'두 번 누르면 지워진다'); assert.strictEqual((await p.$$('.slot-del')).length,0);
   await p.setInputFiles('#load-file-setup',fpath); await p.waitForTimeout(200); assert.strictEqual(await G('S.ready'),false); assert.strictEqual(await G('c.month'),mSave); ok('첫 화면 칸 목록 · 눌러 불러오기 · 지우기 두 번 · 파일에서 불러오기');
   await p.evaluate(()=>document.querySelector('#stage').scrollIntoView({block:'center'})); await p.click('.sim-speed button[data-speed="0"]');
-  // 12) 전체 화면 단추 → fs 상태, 닫기 단추로 돌아온다. 판이 넓어진다
+  // 12) 전체 화면 버튼 → fs 상태, 닫기 버튼으로 돌아온다. 판이 넓어진다
   const w0=(await bb()).w; await p.click('#full'); await p.waitForTimeout(500); assert.ok(await G('S.isFull()')); assert.ok(!(await p.$eval('#exit-full',e=>e.hidden))); assert.ok((await bb()).w>w0,'전체 화면에서 판이 넓다');
   await p.click('#exit-full'); await p.waitForTimeout(400); assert.ok(!(await G('S.isFull()'))); assert.ok(Math.abs((await bb()).w-w0)<2); ok('전체 화면: 켜고 끄기');
   // 13) 다른 탭을 보면 멎는다(저절로 저장하지는 않는다)

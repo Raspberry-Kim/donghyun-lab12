@@ -294,7 +294,7 @@ function draw(){
   if(ghost){ const n=ghost.n||1, px=px0(ghost.x), py=py0(ghost.y); g.lineWidth=Math.max(2,ts/5); g.strokeStyle=ghost.ok?'rgba(63,174,82,.95)':'rgba(214,64,58,.95)'; g.fillStyle=ghost.ok?'rgba(63,174,82,.22)':'rgba(214,64,58,.22)';
     g.fillRect(px,py,ts*n,ts*n); g.strokeRect(px+1,py+1,ts*n-2,ts*n-2); }
   g.restore();
-  if((paused||menu)&&!ready){ g.fillStyle='rgba(20,18,14,.55)'; g.fillRect(0,0,cssW,cssH); if(menu) return; g.fillStyle='#fff'; g.font=`700 ${Math.round(Math.min(cssW,cssH)/16)}px ${getComputedStyle(document.body).getPropertyValue('--display')||'sans-serif'}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(speed===0?'멈춤':'잠시 멎음',cssW/2,cssH/2-14); g.font=`500 13px ${font}`; g.fillText(pauseWhy||'▶ 단추를 누르면 달이 흐른다',cssW/2,cssH/2+18); }
+  if((paused||menu)&&!ready){ g.fillStyle='rgba(20,18,14,.55)'; g.fillRect(0,0,cssW,cssH); if(menu) return; g.fillStyle='#fff'; g.font=`700 ${Math.round(Math.min(cssW,cssH)/16)}px ${getComputedStyle(document.body).getPropertyValue('--display')||'sans-serif'}`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(speed===0?'멈춤':'잠시 멎음',cssW/2,cssH/2-14); g.font=`500 13px ${font}`; g.fillText(pauseWhy||'▶ 버튼을 누르면 달이 흐른다',cssW/2,cssH/2+18); }
 }
 function drawOverlay(x0,y0,x1,y1,ts,px0,py0){ const m=city.maps, W=city.W;
   for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++){ const c=city.grid[y][x], i=y*W+x, px=px0(x), py=py0(y); let col=null;
@@ -361,7 +361,7 @@ function bigPos(c,n){ n=n||3; const o=Math.floor((n-1)/2); return {x:Math.max(0,
 function applyAt(x,y){ if(!city||ready) return null; let r;
   if(tool==='road') r=city.placeRoad(x,y); else if(tool==='wire') r=city.placeWire(x,y); else if(tool==='park') r=city.placePark(x,y); else if(tool==='bull') r=city.bulldoze(x,y); else if(tool==='repair') r=city.repair(x,y);
   else if(KINDS.includes(tool)) r=city.placeZone(tool,x,y); else if(BUILD_NAME[tool]) r=city.placeBuilding(tool,x,y); else return null;
-  if(r.ok){ city.recompute(); handleMsgs(); renderHud(); const t=toolOf(tool); status(`${t.name} · −${r.cost.toLocaleString()}냥 · 자금 ${Math.round(city.funds).toLocaleString()}냥${tool==='cityhall'?' · 시청 단추를 다시 누르면 세율·조례 메뉴':''}`);
+  if(r.ok){ city.recompute(); handleMsgs(); renderHud(); const t=toolOf(tool); status(`${t.name} · −${r.cost.toLocaleString()}냥 · 자금 ${Math.round(city.funds).toLocaleString()}냥${tool==='cityhall'?' · 시청 버튼을 다시 누르면 세율·조례 메뉴':''}`);
     SND.play(tool==='bull'?'crunch':tool==='repair'?'build':PAINT.includes(tool)?'road':(PLANT[tool]||LANDMARKS.includes(tool)||tool==='cityhall')?'big':'build'); deniedWhy=''; if(tool==='cityhall') refreshToolCost(); }
   else if(!/^이미|^빈 땅$|멀쩡/.test(r.why)){ if(deniedWhy!==r.why){ deniedWhy=r.why; status(`${toolOf(tool).name} · ${r.why}`,'error'); SND.play('buzz'); } }
   return r; }
@@ -431,7 +431,7 @@ function start(opts){
   if(p.err){ result('동현심 규약 오류: '+p.err,'error'); status('규약 오류','error'); return false; }
   settings={fundsOpt:p.fundsOpt,events:p.events,disasters:p.disasters}; setCard(settings);
   const rdy=!!(opts&&opts.ready);
-  result((p.note?p.note+' ':'')+(rdy?`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}. 판의 단추를 누르면 시작한다.`:`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}으로 새 도시를 시작했다. 발전소를 세우고 길을 깔아 보자.`));
+  result((p.note?p.note+' ':'')+(rdy?`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}. 판의 버튼을 누르면 시작한다.`:`${FUNDS_LABEL[settings.fundsOpt]} · 이벤트 ${FLAG(settings.events)} · 재해 ${FLAG(settings.disasters)}으로 새 도시를 시작했다. 발전소를 세우고 길을 깔아 보자.`));
   newCity({ready:rdy}); return true;
 }
 setTool('road'); start({ready:true});
