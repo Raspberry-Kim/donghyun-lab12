@@ -404,7 +404,10 @@ function endPointer(e,cancel){ if(!pointers.has(e.pointerId)) return; const c=ce
   board.classList.remove('panning'); mode=null; lastCell=null; if(e.pointerType!=='mouse') ghost=null; else updateGhost(c); }
 board.addEventListener('pointerup',e=>endPointer(e,false)); board.addEventListener('pointercancel',e=>endPointer(e,true));
 board.addEventListener('pointerleave',e=>{ if(!pointers.has(e.pointerId)) ghost=null; });
-board.addEventListener('wheel',e=>{ if(!city||menu) return; e.preventDefault(); const c=cellOf(e); setZoom(cam.zoom*Math.pow(1.0015,-e.deltaY),c.px,c.py); },{passive:false});
+// v0.18: 판의 배율은 + · − · ⤢ 아이콘으로 바꾼다(동현항과 같은 규칙). 마우스 바퀴와 트랙패드 제스처로는 바뀌지 않는다.
+// 도시를 연 뒤 플레이 영역에서는 트랙패드 확대(Ctrl+바퀴)와 Safari gesture가 페이지를 키우지 않게 막는다. 문서의 브라우저 확대 키와 보통 스크롤은 그대로 둔다.
+stage.addEventListener('wheel',e=>{ if(city&&!ready&&e.ctrlKey) e.preventDefault(); },{passive:false});
+for(const kind of ['gesturestart','gesturechange','gestureend']) stage.addEventListener(kind,e=>{ if(city&&!ready) e.preventDefault(); },{passive:false});
 $('#zoom-in').onclick=()=>{ setZoom(cam.zoom*1.5); SND.play('tick'); }; $('#zoom-out').onclick=()=>{ setZoom(cam.zoom/1.5); SND.play('tick'); }; $('#zoom-fit').onclick=()=>{ fitAll(); SND.play('tick'); };
 $('#ready').addEventListener('click',e=>{ if(e.target===e.currentTarget) begin(); });
 
