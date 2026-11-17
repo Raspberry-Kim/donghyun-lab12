@@ -263,6 +263,21 @@ html{touch-action:manipulation}.sim-wrap,.sim-tools button,.sim-round,.sim-speed
   .sim-wrap.fs .sim-tools{grid-template-columns:repeat(8,1fr)}.sim-wrap.fs .sim-tools button{min-height:44px}.sim-wrap.fs .sim-tools button small{display:none}
 }
 @media(max-width:420px){.sim-wrap.fs .sim-tools{grid-template-columns:repeat(4,1fr)}}
+/* v0.18: 휴대폰 가로(낮고 넓은 화면)의 전체 화면. 판을 왼쪽에 세로 가득 두고, 정보 칩·도구 묶음·도구·소식을 오른쪽에 쌓는다. */
+@media(orientation:landscape) and (max-height:520px){
+  .sim-wrap.fs{--side:clamp(236px,38vw,330px);display:grid;grid-template-columns:minmax(0,1fr) var(--side);grid-template-rows:auto auto minmax(0,1fr) auto;gap:5px 8px}
+  .sim-wrap.fs .sim-main{grid-column:1;grid-row:1/-1;min-width:0}
+  .sim-wrap.fs .sim-top{grid-column:2;grid-row:1;padding:0;gap:4px}
+  .sim-wrap.fs .sim-toolgroups{grid-column:2;grid-row:2;margin:0;gap:3px}
+  .sim-wrap.fs .sim-tools{grid-column:2;grid-row:3;grid-template-columns:repeat(4,1fr);align-content:start;overflow-y:auto;overscroll-behavior:contain;min-height:0}
+  .sim-wrap.fs .sim-tools button{min-height:44px}.sim-wrap.fs .sim-tools button small{display:none}
+  .sim-wrap.fs .sim-news{grid-column:2;grid-row:4;max-height:30px}.sim-wrap.fs .sim-news li{white-space:nowrap;overflow:hidden}.sim-wrap.fs .sim-news li time{display:none}
+  .sim-wrap.fs .sim-exit{left:auto;right:calc(var(--side) + 26px + env(safe-area-inset-right));top:calc(16px + env(safe-area-inset-top));padding:7px 10px}   /* 닫기 버튼은 판의 오른쪽 위(보기 버튼 옆)에 둔다 */
+  .sim-wrap.fs .sim-chip{min-width:0;flex:1 1 auto;padding:3px 6px}.sim-wrap.fs .sim-chip strong{font-size:14px}
+  .sim-wrap.fs .sim-chip.date,.sim-wrap.fs .sim-chip.size,.sim-wrap.fs .sim-ach{display:none}
+  .sim-wrap.fs .sim-chip.tax input{width:56px}
+  .sim-wrap.fs .sim-toolgroups button{padding:4px 8px;font-size:11px}
+}
 @media(prefers-reduced-motion:reduce){.sim-news li.new{animation:none}}
 
 /* 입력 표식: 머리글 오른쪽에 붙여 정렬, 켜진 아이콘만 이 실험실에서 쓸 수 있는 입력. 네 번째는 전체 화면 */

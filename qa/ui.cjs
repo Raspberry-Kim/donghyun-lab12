@@ -1,5 +1,5 @@
 // 화면 시험: node qa/ui.cjs (index.html을 파일로 연다 · build 뒤에 돌린다)
-// 첫 화면·규약 오류·도구 누르기·마우스 끌기·3×3 유령 놓기·바퀴 확대·가운데 버튼 끌기·정보·보기·속도·멎음·저장 메뉴와 칸 3개·.dhsave·첫 화면 칸 목록·전체 화면·휴대폰 터치·두 손가락·키보드 무시·시리즈 띠·콘솔 오류를 본다
+// 첫 화면·규약 오류·도구 누르기·마우스 끌기·3×3 유령 놓기·바퀴와 제스처 차단·가운데 버튼 끌기·정보·보기·속도·멎음·저장 메뉴와 칸 3개·.dhsave·첫 화면 칸 목록·전체 화면·휴대폰 터치·두 손가락·키보드 무시·시리즈 띠·콘솔 오류를 본다
 const {chromium}=require('/home/user/node_modules/playwright'); const path=require('path'); const assert=require('assert');
 const GROUP_OF=id=>['pan','info','road','wire','park','bull','repair','land'].includes(id)?0:['R','RH','C','CD','I','IH'].includes(id)?1:['power','hydro','wind','nuclear','solar','fusion'].includes(id)?2:['tower','stadium','airport','harbor'].includes(id)?4:3;
 async function tool(pg,id,tap){ const gsel=`#toolgroups button[data-group="${GROUP_OF(id)}"]`, tsel=`#tools button[data-tool="${id}"]`; if(tap){ await pg.tap(gsel); await pg.tap(tsel); } else { await pg.click(gsel); await pg.click(tsel); } }
@@ -45,10 +45,14 @@ const H='window.__donghyunsim';
   // 6) 철거: 끌면 길이 사라진다. 정보: 칸 설명이 뜬다
   await tool(p,'bull'); a=await cellXY(13,9); const b2=await cellXY(14,9); await p.mouse.move(a.x,a.y); await p.mouse.down(); await p.mouse.move(b2.x,b2.y,{steps:2}); await p.mouse.up(); assert.strictEqual((await cellAt(13,9)).t,0); assert.strictEqual((await cellAt(14,9)).t,0);
   await tool(p,'info'); a=await cellXY(5,11); await p.mouse.click(a.x,a.y); assert.ok(!(await p.$eval('#info',e=>e.hidden))); assert.match(await p.$eval('#info',e=>e.textContent),/주거 구역/); ok('철거 끌기 · 정보 풍선');
-  // 7) 바퀴 확대·가운데 버튼 끌기·+·−·⤢
-  const z0=await G('S.cam.zoom'); a=await cellXY(10,10); await p.mouse.move(a.x,a.y); await p.mouse.wheel(0,-600); assert.ok((await G('S.cam.zoom'))>z0,'바퀴로 확대');
+  // 7) 바퀴와 제스처로는 확대되지 않음·가운데 버튼 끌기·+·−·⤢
+  const z0=await G('S.cam.zoom'); a=await cellXY(10,10); await p.mouse.move(a.x,a.y); await p.mouse.wheel(0,-600); assert.strictEqual(await G('S.cam.zoom'),z0,'바퀴로는 배율이 바뀌지 않는다(v0.18)');
+  const blocked=await p.evaluate(()=>{const el=document.querySelector('#board');return ['wheel','gesturestart','gesturechange','gestureend'].map(t=>{const e=t==='wheel'?new WheelEvent(t,{ctrlKey:true,deltaY:-80,bubbles:true,cancelable:true}):new Event(t,{bubbles:true,cancelable:true});el.dispatchEvent(e);return e.defaultPrevented;});});
+  assert.deepStrictEqual(blocked,[true,true,true,true],'트랙패드 확대(Ctrl+바퀴)와 Safari gesture를 막는다'); assert.strictEqual(await G('S.cam.zoom'),z0);
+  const plain=await p.evaluate(()=>{const e=new WheelEvent('wheel',{deltaY:80,bubbles:true,cancelable:true});document.querySelector('#board').dispatchEvent(e);return e.defaultPrevented;}); assert.strictEqual(plain,false,'보통 스크롤은 막지 않는다');
+  await p.click('#zoom-in'); assert.ok((await G('S.cam.zoom'))>z0,'+ 아이콘으로 확대');
   const cx0=await G('S.cam.x'); await p.mouse.move(a.x,a.y); await p.mouse.down({button:'middle'}); await p.mouse.move(a.x-120,a.y,{steps:3}); await p.mouse.up({button:'middle'}); assert.ok((await G('S.cam.x'))>cx0,'가운데 버튼으로 옮김');
-  await p.click('#zoom-fit'); assert.ok(Math.abs((await G('S.cam.zoom'))-z0)<1e-6,'전체 보기'); await p.click('#zoom-in'); assert.ok((await G('S.cam.zoom'))>z0); await p.click('#zoom-out'); ok('확대·축소·옮기기: 바퀴 · 가운데 버튼 · 버튼');
+  await p.click('#zoom-fit'); assert.ok(Math.abs((await G('S.cam.zoom'))-z0)<1e-6,'전체 보기'); await p.click('#zoom-in'); assert.ok((await G('S.cam.zoom'))>z0); await p.click('#zoom-out'); ok('확대·축소·옮기기: 바퀴와 제스처 차단 · 가운데 버튼 · 아이콘');
   // 8) 이동 도구로 끌어도 아무것도 놓이지 않는다
   await p.click('#zoom-in'); await tool(p,'pan'); const zn=await G('c.zones.filter(Boolean).length'), rn=await G('c.grid.flat().filter(k=>k.t===3).length'); a=await cellXY(12,12); await p.mouse.move(a.x,a.y); await p.mouse.down(); await p.mouse.move(a.x-80,a.y-60,{steps:3}); await p.mouse.up();
   assert.strictEqual(await G('c.zones.filter(Boolean).length'),zn); assert.strictEqual(await G('c.grid.flat().filter(k=>k.t===3).length'),rn); await p.click('#zoom-fit'); ok('이동 도구: 끌어도 놓이지 않음');
@@ -136,7 +140,18 @@ const H='window.__donghyunsim';
   await m.tap('#full'); await m.waitForTimeout(500); assert.ok(await MG('S.isFull()')); assert.ok((await m.$eval('#board',e=>e.getBoundingClientRect().width))>=360); await m.tap('#exit-full'); await m.waitForTimeout(300); assert.ok(!(await MG('S.isFull()')));
   assert.strictEqual(await m.$eval('.series-links',e=>e.children.length),19); assert.strictEqual(await m.$eval('.series-item[data-series="lang"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','홀수면 동현랭 두 칸 폭'); assert.notStrictEqual(await m.$eval('.series-item[data-series="zooo"]',e=>getComputedStyle(e).gridColumn.replace(/\s/g,'')),'span2','19개(홀수)면 동현랭만 크다');
   ok('휴대폰: 터치 시작·발전소·길 끌기·두 손가락·전체 화면·띠');
-  await ctx.close(); await b.close();
+  await ctx.close();
+  // 휴대폰 가로 전체 화면(v0.18): 판이 왼쪽에 세로 가득, 정보·도구는 오른쪽. 닫기 버튼은 판 오른쪽 위(보기 버튼과 겹치지 않는다)
+  for(const [w,h] of [[734,343],[568,320]]){
+    const lc=await b.newContext({viewport:{width:w,height:h},deviceScaleFactor:2,isMobile:true,hasTouch:true}); const l=await lc.newPage(); l.on('pageerror',e=>errs.push(e.message));
+    await l.goto(url); await l.waitForTimeout(400); await l.tap('#begin'); await l.waitForTimeout(200); await l.evaluate(()=>document.querySelector('#full').scrollIntoView({block:'center'})); await l.tap('#full'); await l.waitForTimeout(600);
+    const r=await l.evaluate(()=>{const q=s=>{const e=document.querySelector(s).getBoundingClientRect();return {x:e.left,y:e.top,r:e.right,b:e.bottom,w:e.width,h:e.height};};return {full:window.__donghyunsim.isFull(),board:q('#board'),top:q('.sim-top'),tools:q('#tools'),news:q('#news'),exit:q('#exit-full'),view:q('.sim-view'),zoom:q('.sim-zoom'),vw:innerWidth,vh:innerHeight,ov:document.documentElement.scrollWidth-innerWidth};});
+    assert.ok(r.full&&r.board.h>=r.vh*.9&&r.board.w>=r.vw*.5,JSON.stringify(r)); assert.ok(r.top.x>=r.board.r&&r.tools.x>=r.board.r&&r.tools.r<=r.vw&&r.news.b<=r.vh+1&&r.tools.h>=88,JSON.stringify(r));
+    assert.ok(r.exit.x>=r.view.r&&r.exit.r<=r.board.r&&r.exit.b<=r.zoom.y&&r.ov<=0,JSON.stringify(r));
+    await l.tap('#exit-full'); await l.waitForTimeout(300); assert.ok(!(await l.evaluate(()=>window.__donghyunsim.isFull()))); await lc.close();
+  }
+  ok('휴대폰 가로 전체 화면: 734×343 · 568×320에서 판이 세로 가득 · 도구는 오른쪽 · 닫기 버튼이 보기 버튼과 겹치지 않음');
+  await b.close();
   if(errs.length){ console.error('콘솔 오류',errs); process.exit(1); }
   console.log(`\n${n} ui tests passed · 콘솔 오류 0`);
 })().catch(e=>{ console.error(e); process.exit(1); });
