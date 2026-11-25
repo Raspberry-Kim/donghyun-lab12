@@ -85,7 +85,7 @@ a.series-item:hover{background:#fff0c6;border-color:#b99542;transform:translateY
 .document{max-width:1080px;margin:auto;padding:8px 0 40px}
 .document h2{font:400 var(--text-xl) var(--display);margin-bottom:12px;line-height:1.35}
 .document h3{margin:28px 0 10px;font-size:var(--text-lg)}
-.document p,.document li{line-height:1.85;color:var(--muted);word-break:keep-all}
+.document p,.document li{line-height:1.85;color:var(--muted);word-break:keep-all;overflow-wrap:break-word}
 .document p{margin:10px 0}
 .document code{background:var(--surface2);padding:1px 5px;border-radius:4px;font-family:var(--mono)}
 .document a{color:#6b7400}[data-theme=dark] .document a{color:#b4c03a}
